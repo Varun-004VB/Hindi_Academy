@@ -1,14 +1,10 @@
 import {
-  CheckCircle,
   Play,
-  Star,
   Users,
-  Award,
   BookOpen,
   Target,
   Trophy,
   ArrowRight,
-  Sparkles,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -34,7 +30,9 @@ function AnimatedSection({
     );
 
     ref.current && observer.observe(ref.current);
-    return () => ref.current && observer.unobserve(ref.current);
+    return () => {
+      ref.current && observer.unobserve(ref.current);
+    };
   }, []);
 
   const animations: any = {
@@ -47,11 +45,10 @@ function AnimatedSection({
   return (
     <div
       ref={ref}
-      className={`transition-all duration-1000 ease-out ${
-        isVisible
-          ? "translate-x-0 translate-y-0 opacity-100"
-          : animations[direction]
-      } ${className}`}
+      className={`transition-all duration-1000 ease-out ${isVisible
+        ? "translate-x-0 translate-y-0 opacity-100"
+        : animations[direction]
+        } ${className}`}
       style={{ transitionDelay: `${delay}ms` }}
     >
       {children}
@@ -66,10 +63,10 @@ export default function Hero({ onOpenModal }: HeroProps) {
     <div className="relative overflow-hidden">
       {/* HERO SECTION - NEW MODERN THEME */}
       <div className="relative bg-gradient-to-br from-indigo-950 via-purple-900 to-violet-950 text-white overflow-hidden">
-        
+
         {/* Subtle futuristic grid overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
-        
+
         {/* Ambient light glow spots */}
         <div className="absolute top-0 left-0 w-96 h-96 bg-purple-500/30 rounded-full blur-[128px] -translate-x-1/2 -translate-y-1/2"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-500/20 rounded-full blur-[128px] translate-x-1/2 translate-y-1/2"></div>
@@ -79,13 +76,13 @@ export default function Hero({ onOpenModal }: HeroProps) {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* LEFT CONTENT */}
             <div className="space-y-8">
-              
-             
+
+
 
               {/* Heading */}
               <AnimatedSection delay={200}>
                 <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight">
-                   Raanuva Veeran
+                  Raanuva Veeran
                   <br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-purple-400 animate-pulse">
                     Spoken Hindi Academy
@@ -180,14 +177,14 @@ export default function Hero({ onOpenModal }: HeroProps) {
               <div className="relative group perspective-1000">
                 {/* Behind glow */}
                 <div className="absolute -inset-4 bg-gradient-to-r from-purple-600 via-cyan-600 to-purple-600 rounded-[2.5rem] blur-2xl opacity-30 group-hover:opacity-50 transition duration-1000 animate-tilt"></div>
-                
+
                 <img
-                  src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=900&auto=format&fit=crop&q=80"
+                  src="/image.png"
                   className="relative rounded-[2rem] shadow-2xl border border-white/10 z-10 object-cover w-full h-full transform transition duration-500 group-hover:scale-[1.01]"
                   alt="Students learning"
                 />
 
-            
+
               </div>
             </AnimatedSection>
           </div>
@@ -195,9 +192,9 @@ export default function Hero({ onOpenModal }: HeroProps) {
 
         {/* WAVE DIVIDER - Blending into white */}
         <div className="absolute bottom-0 w-full translate-y-[1px]">
-            <svg viewBox="0 0 1440 120" className="w-full h-auto block text-white fill-current">
+          <svg viewBox="0 0 1440 120" className="w-full h-auto block text-white fill-current">
             <path d="M0,96L48,85.3C96,75,192,53,288,53.3C384,53,480,75,576,85.3C672,96,768,96,864,85.3C960,75,1056,53,1152,42.7C1248,32,1344,32,1392,32L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"></path>
-            </svg>
+          </svg>
         </div>
       </div>
 

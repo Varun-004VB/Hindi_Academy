@@ -1,12 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Star, Quote } from 'lucide-react';
 
+interface Testimonial {
+  name: string;
+  role: string;
+  image: string;
+  text: string;
+  rating: number;
+}
+
 export default function Testimonials() {
-  const [testimonials, setTestimonials] = useState([]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [averageRating, setAverageRating] = useState('5.0');
-  const [reviewCount, setReviewCount] = useState('50,000+'); 
+  const [averageRating] = useState('5.0');
+  const [reviewCount] = useState('50,000+');
 
   const fetchedTestimonials = [
     {
@@ -76,7 +84,7 @@ export default function Testimonials() {
       </section>
     );
   }
-  
+
 
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
@@ -92,7 +100,7 @@ export default function Testimonials() {
 
         <div className="md:hidden relative">
           <div className="overflow-hidden">
-            <div 
+            <div
               className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
@@ -138,11 +146,10 @@ export default function Testimonials() {
               <button
                 key={index}
                 onClick={() => setCurrentSlide(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  currentSlide === index 
-                    ? 'bg-orange-500 w-8' 
-                    : 'bg-gray-300'
-                }`}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${currentSlide === index
+                  ? 'bg-orange-500 w-8'
+                  : 'bg-gray-300'
+                  }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}

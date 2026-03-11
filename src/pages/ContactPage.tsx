@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Clock, Send, MessageCircle, HelpCircle, Globe, Facebook, Twitter, Instagram, Linkedin, Youtube, Users, Headphones, Award, CheckCircle, MessageSquare, CalendarCheck, Zap, Shield, Star, Loader2, AlertCircle, Check } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, Send, MessageCircle, HelpCircle, Facebook, Twitter, Instagram, Linkedin, Youtube, Users, Headphones, Award, CheckCircle, MessageSquare, Zap, Shield, Star, Loader2, AlertCircle, Check } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
 // ------------------- CONSTANTS & DATA -------------------
@@ -122,7 +122,7 @@ const whyContactUs = [
 ];
 
 // ------------------- ANIMATION COMPONENT -------------------
-function AnimatedSection({ children, direction = 'left', className = '' }) {
+function AnimatedSection({ children, direction = 'left', className = '' }: { children: React.ReactNode; direction?: 'left' | 'right' | 'up' | 'fade'; className?: string }) {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
 
@@ -147,7 +147,7 @@ function AnimatedSection({ children, direction = 'left', className = '' }) {
     };
   }, []);
 
-  const animations = {
+  const animations: Record<string, string> = {
     left: 'translate-x-[-100px] opacity-0',
     right: 'translate-x-[100px] opacity-0',
     up: 'translate-y-[50px] opacity-0',
@@ -157,9 +157,8 @@ function AnimatedSection({ children, direction = 'left', className = '' }) {
   return (
     <div
       ref={ref}
-      className={`transition-all duration-1000 ease-out ${
-        isVisible ? 'translate-x-0 translate-y-0 opacity-100' : animations[direction]
-      } ${className}`}
+      className={`transition-all duration-1000 ease-out ${isVisible ? 'translate-x-0 translate-y-0 opacity-100' : animations[direction]
+        } ${className}`}
     >
       {children}
     </div>
@@ -168,7 +167,7 @@ function AnimatedSection({ children, direction = 'left', className = '' }) {
 
 // ------------------- MAIN COMPONENT -------------------
 export default function ContactPage() {
-  const [openFaq, setOpenFaq] = useState(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   // 1. ADDED: State for form handling
   const [formData, setFormData] = useState({
@@ -179,24 +178,24 @@ export default function ContactPage() {
     subject: 'General Inquiry',
     message: ''
   });
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState({ type: null, message: '' });
+  const [submitStatus, setSubmitStatus] = useState<{ type: 'success' | 'error' | null; message: string }>({ type: null, message: '' });
 
   // 2. ADDED: Handle input changes
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   // 3. ADDED: Handle Form Submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus({ type: null, message: '' });
 
     // 🔴 REPLACE WITH YOUR DEPLOYED GOOGLE SCRIPT URL
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxlQ6c1XZgOkvqPryBvnc9IVxhr8_1z5sqQQLAQTR8t7w_8xRrEtsfsAvbnEe6Vx1we/exec"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxlQ6c1XZgOkvqPryBvnc9IVxhr8_1z5sqQQLAQTR8t7w_8xRrEtsfsAvbnEe6Vx1we/exec";
 
     try {
       // We use 'no-cors' mode often for Google Scripts to avoid CORS errors, 
@@ -208,11 +207,11 @@ export default function ContactPage() {
         // Note: We don't set Content-Type header to avoid preflight OPTIONS request issues with GAS
       });
 
-      setSubmitStatus({ 
-        type: 'success', 
-        message: 'Thank you! Your message has been sent successfully.' 
+      setSubmitStatus({
+        type: 'success',
+        message: 'Thank you! Your message has been sent successfully.'
       });
-      
+
       // Reset form
       setFormData({
         firstName: '',
@@ -225,9 +224,9 @@ export default function ContactPage() {
 
     } catch (error) {
       console.error("Error submitting form", error);
-      setSubmitStatus({ 
-        type: 'error', 
-        message: 'Something went wrong. Please try again later.' 
+      setSubmitStatus({
+        type: 'error',
+        message: 'Something went wrong. Please try again later.'
       });
     } finally {
       setIsSubmitting(false);
@@ -250,7 +249,7 @@ export default function ContactPage() {
         </div>
         <div className="absolute bottom-0 left-0 right-0">
           <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-            <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
+            <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white" />
           </svg>
         </div>
       </div>
@@ -329,7 +328,7 @@ export default function ContactPage() {
       <div className="bg-gradient-to-br from-purple-50 to-pink-50 py-12 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-            
+
             {/* 4. UPDATED: Form Section */}
             <AnimatedSection direction="left">
               <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-xl">
@@ -411,7 +410,7 @@ export default function ContactPage() {
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Subject
                     </label>
-                    <select 
+                    <select
                       name="subject"
                       value={formData.subject}
                       onChange={handleChange}

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ManpowerSection from "../components/admin/ManpowerSection";
-
 // ─── Interfaces ───
 interface Course {
   id: number;
@@ -24,9 +23,12 @@ const AdminDashboard: React.FC = () => {
 
   // Initialize tab from URL query param if present (?tab=manpower)
   const queryParams = new URLSearchParams(location.search);
-  const initialTab = queryParams.get("tab") as "courses" | "manpower" || "courses";
+  const initialTab = queryParams.get("tab") as "courses" | "manpower" | "live" || "courses";
 
-  const [activeTab, setActiveTab] = useState<"courses" | "manpower">(initialTab);
+  const [activeTab, setActiveTab] = useState<"courses" | "manpower" | "live">(initialTab as any);
+  const [isLiveActive, setIsLiveActive] = useState<boolean>(localStorage.getItem('isLiveActive') === 'true');
+  const [tempLink, setTempLink] = useState<string>('');
+
   const [courses, setCourses] = useState<Course[]>(initialCourses);
 
   // Form states
@@ -38,13 +40,27 @@ const AdminDashboard: React.FC = () => {
   }, [navigate]);
 
   useEffect(() => {
-    const tab = queryParams.get("tab") as "courses" | "manpower";
+    const tab = queryParams.get("tab") as "courses" | "manpower" | "live";
     if (tab) setActiveTab(tab);
   }, [location.search]);
 
   const handleLogout = () => {
     localStorage.removeItem("admin");
     navigate("/admin");
+  };
+
+  const startLiveClass = () => {
+    if (!tempLink) return;
+    localStorage.setItem('isLiveActive', 'true');
+    localStorage.setItem('liveMeetingLink', tempLink);
+    setIsLiveActive(true);
+  };
+
+  const endLiveClass = () => {
+    localStorage.removeItem('isLiveActive');
+    localStorage.removeItem('liveMeetingLink');
+    setIsLiveActive(false);
+    setTempLink('');
   };
 
   const openManpowerInNewTab = (e: React.MouseEvent) => {
@@ -96,7 +112,15 @@ const AdminDashboard: React.FC = () => {
             </div>
             <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
           </button>
+          <button
+            onClick={() => { setActiveTab("live"); navigate("/admin-dashboard?tab=live"); }}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${activeTab === "live" ? "bg-blue-50 text-blue-600 font-medium" : "text-gray-600 hover:bg-gray-50"}`}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+            Live Class
+          </button>
         </nav>
+
 
         <div className="p-4 border-t border-gray-100">
           <button
@@ -114,10 +138,10 @@ const AdminDashboard: React.FC = () => {
         <header className="flex justify-between items-center mb-8">
           <div>
             <h2 className="text-2xl font-bold text-gray-800">
-              {activeTab === "courses" ? "Course Details" : "Manpower Construction Services"}
+              {activeTab === "courses" ? "Course Details" : activeTab === "live" ? "Live Class Management" : "Manpower Construction Services"}
             </h2>
             <p className="text-gray-500 mt-1">
-              {activeTab === "courses" ? "Manage your educational courses here." : "Manage the complete lifecycle of construction sites, workforce, and financials."}
+              {activeTab === "courses" ? "Manage your educational courses here." : activeTab === "live" ? "Manage your live interactive sessions here." : "Manage the complete lifecycle of construction sites, workforce, and financials."}
             </p>
           </div>
 
@@ -173,10 +197,93 @@ const AdminDashboard: React.FC = () => {
           </div>
         )}
 
-        {/* ── Manpower Section Component ── */}
+        {/* ── Live Class Section ── */}
+        {activeTab === "live" && (
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <div className={`rounded-2xl p-8 text-white transition-all duration-500 bg-gradient-to-r ${isLiveActive ? 'from-green-600 to-teal-600' : 'from-blue-600 to-indigo-600'}`}>
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="flex items-center gap-6">
+                  <div className="bg-white/20 p-4 rounded-3xl backdrop-blur-md">
+                    <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold">Live Class Management</h3>
+                    <p className="text-white/80 mt-1">
+                      {isLiveActive
+                        ? `Session is active with external link.`
+                        : 'Manage your live interactive sessions here.'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  {!isLiveActive && (
+                    <button
+                      onClick={() => window.open('https://googlemeeting.vercel.app/', '_blank')}
+                      className="bg-white text-blue-700 px-6 py-3 rounded-xl font-bold hover:bg-blue-50 transition-all flex items-center gap-2 shadow-lg"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                      Open Meeting Engine
+                    </button>
+                  )}
+                  {isLiveActive && (
+                    <button
+                      onClick={endLiveClass}
+                      className="bg-red-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-red-600 transition-all flex items-center gap-2 shadow-lg"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                      Stop Current Meeting
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {!isLiveActive && (
+                <div className="mt-8 pt-8 border-t border-white/20">
+                  <label className="block text-sm font-bold mb-2">Paste Meeting Link to Start:</label>
+                  <div className="flex gap-4">
+                    <input
+                      type="text"
+                      placeholder="https://googlemeeting.vercel.app/?room=..."
+                      className="flex-1 px-4 py-3 rounded-xl text-gray-900 focus:outline-none"
+                      value={tempLink}
+                      onChange={(e) => setTempLink(e.target.value)}
+                    />
+                    <button
+                      onClick={startLiveClass}
+                      className="bg-white text-blue-700 px-8 py-3 rounded-xl font-bold hover:bg-blue-50 transition-all shadow-lg"
+                    >
+                      Start Session
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-12 grid md:grid-cols-3 gap-6">
+              <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                <h4 className="font-bold text-gray-800 mb-2">Step 1: Open Engine</h4>
+                <p className="text-sm text-gray-600">Click "Open Meeting Engine" to create a new room on the external platform.</p>
+              </div>
+              <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                <h4 className="font-bold text-gray-800 mb-2">Step 2: Copy Link</h4>
+                <p className="text-sm text-gray-600">Once in the room, copy the full browser URL of the meeting.</p>
+              </div>
+              <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                <h4 className="font-bold text-gray-800 mb-2">Step 3: Start Here</h4>
+                <p className="text-sm text-gray-600">Paste the link above and click "Start Session" to notify all students.</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── Manpower Section ── */}
         {activeTab === "manpower" && (
           <ManpowerSection />
         )}
+
+
+
       </div>
 
       {/* ── Course Form Modal ── */}

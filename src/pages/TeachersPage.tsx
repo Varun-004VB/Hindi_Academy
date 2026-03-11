@@ -1,4 +1,4 @@
-import { Award, BookOpen, Users, Star, Linkedin, Mail, GraduationCap, Trophy, MessageCircle, Clock, Target, CheckCircle, Globe, Heart, Video, Calendar } from 'lucide-react';
+import { Award, BookOpen, Users, Star, Linkedin, Mail, GraduationCap, Trophy, MessageCircle, Target, Globe, Video, Calendar } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
 const teachers = [
@@ -147,7 +147,7 @@ const methodology = [
   }
 ];
 
-function AnimatedSection({ children, direction = 'left', className = '' }) {
+function AnimatedSection({ children, direction = 'left', className = '' }: { children: React.ReactNode; direction?: 'left' | 'right' | 'up' | 'fade'; className?: string }) {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
 
@@ -172,7 +172,7 @@ function AnimatedSection({ children, direction = 'left', className = '' }) {
     };
   }, []);
 
-  const animations = {
+  const animations: Record<string, string> = {
     left: 'translate-x-[-100px] opacity-0',
     right: 'translate-x-[100px] opacity-0',
     up: 'translate-y-[50px] opacity-0',
@@ -182,9 +182,8 @@ function AnimatedSection({ children, direction = 'left', className = '' }) {
   return (
     <div
       ref={ref}
-      className={`transition-all duration-1000 ease-out ${
-        isVisible ? 'translate-x-0 translate-y-0 opacity-100' : animations[direction]
-      } ${className}`}
+      className={`transition-all duration-1000 ease-out ${isVisible ? 'translate-x-0 translate-y-0 opacity-100' : animations[direction]
+        } ${className}`}
     >
       {children}
     </div>
@@ -208,7 +207,7 @@ export default function TeachersPage() {
         </div>
         <div className="absolute bottom-0 left-0 right-0">
           <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-            <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
+            <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white" />
           </svg>
         </div>
       </div>
@@ -428,116 +427,116 @@ export default function TeachersPage() {
       </div>
 
       <div className="relative bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 py-20 overflow-hidden">
-      {/* Left Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="text-white z-10">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-6 leading-tight">
-              Ready to begin your Hindi learning journey?
-            </h2>
-            <p className="text-xl text-white/90 mb-8 leading-relaxed">
-              Join 50,000+ students across 40+ countries learning Hindi with expert native teachers and flexible online classes.
-            </p>
-            <button className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full font-semibold text-lg hover:bg-white hover:text-purple-900 transition-all transform hover:scale-105">
-              Book Your First Class
-            </button>
-          </div>
-
-          {/* Right Floating Cards */}
-          <div className="relative h-96 lg:h-[500px] hidden lg:block">
-            {/* Large Purple Circle Background */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-purple-600 to-purple-700 rounded-full opacity-40 blur-3xl"></div>
-            
-            {/* Floating Cards */}
-            {/* Learning Progress Card */}
-            <div className="absolute top-8 left-12 bg-white rounded-2xl p-4 shadow-2xl w-48 animate-float">
-              <div className="text-sm font-semibold text-gray-700 mb-2">Learning Progress</div>
-              <div className="flex items-center gap-1 mb-1">
-                {[40, 60, 80, 50, 70].map((height, i) => (
-                  <div key={i} className="flex-1">
-                    <div className="bg-gradient-to-t from-purple-600 to-purple-400 rounded" style={{height: `${height}px`}}></div>
-                  </div>
-                ))}
-              </div>
-              <div className="text-xs text-gray-500 flex justify-between">
-                <span>This week</span>
-                <span>75%</span>
-              </div>
-            </div>
-
-            {/* Native Teachers Card */}
-            <div className="absolute top-12 right-8 bg-white rounded-2xl p-4 shadow-2xl w-44 animate-float-delayed">
-              <div className="bg-gradient-to-br from-purple-100 to-pink-100 w-full h-20 rounded-lg mb-2 flex items-center justify-center">
-                <Users className="w-10 h-10 text-purple-600" />
-              </div>
-              <div className="text-xs font-semibold text-gray-700 mb-1">Expert Native Teachers</div>
-              <button className="bg-purple-600 text-white text-xs px-3 py-1 rounded-full w-full font-medium">
-                Meet Teachers
+        {/* Left Content */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="text-white z-10">
+              <h2 className="text-4xl sm:text-5xl font-bold mb-6 leading-tight">
+                Ready to begin your Hindi learning journey?
+              </h2>
+              <p className="text-xl text-white/90 mb-8 leading-relaxed">
+                Join 50,000+ students across 40+ countries learning Hindi with expert native teachers and flexible online classes.
+              </p>
+              <button className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full font-semibold text-lg hover:bg-white hover:text-purple-900 transition-all transform hover:scale-105">
+                Book Your First Class
               </button>
             </div>
 
-            {/* Course Levels Card */}
-            <div className="absolute top-32 left-4 bg-white rounded-2xl p-4 shadow-2xl w-40 animate-float">
-              <div className="text-sm font-semibold text-gray-700 mb-3">Course Levels</div>
-              <div className="space-y-2">
-                {['Beginner', 'Intermediate', 'Advanced', 'Fluent'].map((level, num) => (
-                  <div key={num} className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 text-xs font-bold">
-                      {num + 1}
+            {/* Right Floating Cards */}
+            <div className="relative h-96 lg:h-[500px] hidden lg:block">
+              {/* Large Purple Circle Background */}
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-purple-600 to-purple-700 rounded-full opacity-40 blur-3xl"></div>
+
+              {/* Floating Cards */}
+              {/* Learning Progress Card */}
+              <div className="absolute top-8 left-12 bg-white rounded-2xl p-4 shadow-2xl w-48 animate-float">
+                <div className="text-sm font-semibold text-gray-700 mb-2">Learning Progress</div>
+                <div className="flex items-center gap-1 mb-1">
+                  {[40, 60, 80, 50, 70].map((height, i) => (
+                    <div key={i} className="flex-1">
+                      <div className="bg-gradient-to-t from-purple-600 to-purple-400 rounded" style={{ height: `${height}px` }}></div>
                     </div>
-                    <div className="text-xs text-gray-600">{level}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Global Students Card */}
-            <div className="absolute top-48 right-20 bg-white rounded-2xl p-4 shadow-2xl w-36 h-36 animate-float-delayed flex flex-col items-center justify-center">
-              <Globe className="w-12 h-12 text-purple-600 mb-2" />
-              <div className="text-2xl font-bold text-gray-800">40+</div>
-              <div className="text-xs text-gray-600 text-center">Countries Worldwide</div>
-            </div>
-
-            {/* Weekly Classes Card */}
-            <div className="absolute bottom-20 left-20 bg-white rounded-2xl p-4 shadow-2xl w-36 animate-float">
-              <div className="text-xs text-gray-600 mb-2">Weekly Classes</div>
-              <div className="flex items-end justify-between h-20 gap-2">
-                {[60, 75, 90].map((height, i) => (
-                  <div key={i} className="flex-1 flex flex-col items-center">
-                    <div 
-                      className="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t"
-                      style={{height: `${height}%`}}
-                    ></div>
-                    <span className="text-xs text-gray-500 mt-1">{['Mon', 'Wed', 'Fri'][i]}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Student Satisfaction Card */}
-            <div className="absolute bottom-12 right-4 bg-white rounded-2xl p-4 shadow-2xl w-52 animate-float-delayed">
-              <div className="text-sm font-semibold text-gray-700 mb-3">Student Satisfaction</div>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-600">Success Rate</span>
-                <div className="relative w-16 h-16">
-                  <svg className="transform -rotate-90 w-16 h-16">
-                    <circle cx="32" cy="32" r="28" stroke="#e5e7eb" strokeWidth="6" fill="none" />
-                    <circle cx="32" cy="32" r="28" stroke="#9333ea" strokeWidth="6" fill="none" strokeDasharray="176" strokeDashoffset="18" strokeLinecap="round" />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center text-sm font-bold text-purple-600">95%</div>
+                  ))}
+                </div>
+                <div className="text-xs text-gray-500 flex justify-between">
+                  <span>This week</span>
+                  <span>75%</span>
                 </div>
               </div>
-            </div>
 
-            {/* Decorative Dots */}
-            <div className="absolute top-20 right-1/3 w-4 h-4 bg-cyan-400 rounded-full animate-pulse"></div>
-            <div className="absolute bottom-32 left-1/3 w-6 h-6 bg-cyan-300 rounded-full opacity-60 animate-pulse"></div>
-            <div className="absolute top-1/2 right-12 w-5 h-5 bg-purple-400 rounded-full animate-pulse"></div>
+              {/* Native Teachers Card */}
+              <div className="absolute top-12 right-8 bg-white rounded-2xl p-4 shadow-2xl w-44 animate-float-delayed">
+                <div className="bg-gradient-to-br from-purple-100 to-pink-100 w-full h-20 rounded-lg mb-2 flex items-center justify-center">
+                  <Users className="w-10 h-10 text-purple-600" />
+                </div>
+                <div className="text-xs font-semibold text-gray-700 mb-1">Expert Native Teachers</div>
+                <button className="bg-purple-600 text-white text-xs px-3 py-1 rounded-full w-full font-medium">
+                  Meet Teachers
+                </button>
+              </div>
+
+              {/* Course Levels Card */}
+              <div className="absolute top-32 left-4 bg-white rounded-2xl p-4 shadow-2xl w-40 animate-float">
+                <div className="text-sm font-semibold text-gray-700 mb-3">Course Levels</div>
+                <div className="space-y-2">
+                  {['Beginner', 'Intermediate', 'Advanced', 'Fluent'].map((level, num) => (
+                    <div key={num} className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 text-xs font-bold">
+                        {num + 1}
+                      </div>
+                      <div className="text-xs text-gray-600">{level}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Global Students Card */}
+              <div className="absolute top-48 right-20 bg-white rounded-2xl p-4 shadow-2xl w-36 h-36 animate-float-delayed flex flex-col items-center justify-center">
+                <Globe className="w-12 h-12 text-purple-600 mb-2" />
+                <div className="text-2xl font-bold text-gray-800">40+</div>
+                <div className="text-xs text-gray-600 text-center">Countries Worldwide</div>
+              </div>
+
+              {/* Weekly Classes Card */}
+              <div className="absolute bottom-20 left-20 bg-white rounded-2xl p-4 shadow-2xl w-36 animate-float">
+                <div className="text-xs text-gray-600 mb-2">Weekly Classes</div>
+                <div className="flex items-end justify-between h-20 gap-2">
+                  {[60, 75, 90].map((height, i) => (
+                    <div key={i} className="flex-1 flex flex-col items-center">
+                      <div
+                        className="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t"
+                        style={{ height: `${height}%` }}
+                      ></div>
+                      <span className="text-xs text-gray-500 mt-1">{['Mon', 'Wed', 'Fri'][i]}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Student Satisfaction Card */}
+              <div className="absolute bottom-12 right-4 bg-white rounded-2xl p-4 shadow-2xl w-52 animate-float-delayed">
+                <div className="text-sm font-semibold text-gray-700 mb-3">Student Satisfaction</div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-600">Success Rate</span>
+                  <div className="relative w-16 h-16">
+                    <svg className="transform -rotate-90 w-16 h-16">
+                      <circle cx="32" cy="32" r="28" stroke="#e5e7eb" strokeWidth="6" fill="none" />
+                      <circle cx="32" cy="32" r="28" stroke="#9333ea" strokeWidth="6" fill="none" strokeDasharray="176" strokeDashoffset="18" strokeLinecap="round" />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center text-sm font-bold text-purple-600">95%</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Decorative Dots */}
+              <div className="absolute top-20 right-1/3 w-4 h-4 bg-cyan-400 rounded-full animate-pulse"></div>
+              <div className="absolute bottom-32 left-1/3 w-6 h-6 bg-cyan-300 rounded-full opacity-60 animate-pulse"></div>
+              <div className="absolute top-1/2 right-12 w-5 h-5 bg-purple-400 rounded-full animate-pulse"></div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <style jsx>{`
+        <style>{`
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-20px); }
@@ -553,7 +552,7 @@ export default function TeachersPage() {
           animation: float-delayed 3s ease-in-out infinite 1s;
         }
       `}</style>
-    </div>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Minimize2, User } from 'lucide-react';
+import { MessageCircle, X, Send, Minimize2 } from 'lucide-react';
 
 // Types
 interface Message {
@@ -7,12 +7,7 @@ interface Message {
   content: string;
 }
 
-interface StudentInfo {
-  name: string;
-  email: string;
-  phone: string;
-  experience: string;
-}
+/* Removed unused StudentInfo */
 
 const HindiLearningChat: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,13 +20,7 @@ const HindiLearningChat: React.FC = () => {
     }
   ]);
   const [input, setInput] = useState('');
-  const [studentInfo, setStudentInfo] = useState<StudentInfo>({
-    name: '',
-    email: '',
-    phone: '',
-    experience: ''
-  });
-  const [conversationStep, setConversationStep] = useState(0);
+  /* Removed unused studentInfo and conversationStep */
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   /* 🔥 Allow Contact page to open chat */

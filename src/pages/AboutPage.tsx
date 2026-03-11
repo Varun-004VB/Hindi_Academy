@@ -2,7 +2,7 @@ import { Target, Users, Award, Heart, TrendingUp, Globe, BookOpen, Video, Messag
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-function useInView(options = {}) {
+function useInView(options = {}): [React.RefObject<any>, boolean] {
   const [isInView, setIsInView] = useState(false);
   const ref = useRef(null);
 
@@ -106,7 +106,7 @@ export default function AboutPage() {
         </div>
         <div className="absolute bottom-0 left-0 right-0">
           <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
+            <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white" />
           </svg>
         </div>
       </div>
@@ -149,7 +149,7 @@ export default function AboutPage() {
             </p>
           </div>
           <div className={`bg-white rounded-2xl p-6 sm:p-8 shadow-lg text-center ${missionInView ? 'animate-fade-up' : 'opacity-0'}`}
-               style={{ animationDelay: missionInView ? '0.1s' : '0s' }}>
+            style={{ animationDelay: missionInView ? '0.1s' : '0s' }}>
             <Heart className="w-12 h-12 sm:w-16 sm:h-16 text-red-500 mx-auto mb-4" />
             <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">Our Values</h3>
             <p className="text-gray-600 leading-relaxed">
@@ -157,7 +157,7 @@ export default function AboutPage() {
             </p>
           </div>
           <div className={`bg-white rounded-2xl p-6 sm:p-8 shadow-lg text-center ${missionInView ? 'animate-fade-up' : 'opacity-0'}`}
-               style={{ animationDelay: missionInView ? '0.2s' : '0s' }}>
+            style={{ animationDelay: missionInView ? '0.2s' : '0s' }}>
             <Globe className="w-12 h-12 sm:w-16 sm:h-16 text-blue-500 mx-auto mb-4" />
             <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">Our Vision</h3>
             <p className="text-gray-600 leading-relaxed">
@@ -182,7 +182,7 @@ export default function AboutPage() {
               </div>
             </div>
             <div className={`flex gap-4 ${whyChooseInView ? 'animate-fade-right' : 'opacity-0'}`}
-                 style={{ animationDelay: whyChooseInView ? '0.1s' : '0s' }}>
+              style={{ animationDelay: whyChooseInView ? '0.1s' : '0s' }}>
               <div className="flex-shrink-0">
                 <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
                   <Award className="w-6 h-6 text-white" />
@@ -194,7 +194,7 @@ export default function AboutPage() {
               </div>
             </div>
             <div className={`flex gap-4 ${whyChooseInView ? 'animate-fade-left' : 'opacity-0'}`}
-                 style={{ animationDelay: whyChooseInView ? '0.2s' : '0s' }}>
+              style={{ animationDelay: whyChooseInView ? '0.2s' : '0s' }}>
               <div className="flex-shrink-0">
                 <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
                   <TrendingUp className="w-6 h-6 text-white" />
@@ -217,17 +217,17 @@ export default function AboutPage() {
               <div className="text-sm sm:text-base text-gray-600 font-medium">Students Enrolled</div>
             </div>
             <div className={`bg-white rounded-2xl p-4 sm:p-6 shadow-lg ${impactInView ? 'animate-fade-up' : 'opacity-0'}`}
-                 style={{ animationDelay: impactInView ? '0.1s' : '0s' }}>
+              style={{ animationDelay: impactInView ? '0.1s' : '0s' }}>
               <div className="text-3xl sm:text-4xl font-bold text-blue-500 mb-2">40+</div>
               <div className="text-sm sm:text-base text-gray-600 font-medium">Countries Reached</div>
             </div>
             <div className={`bg-white rounded-2xl p-4 sm:p-6 shadow-lg ${impactInView ? 'animate-fade-up' : 'opacity-0'}`}
-                 style={{ animationDelay: impactInView ? '0.2s' : '0s' }}>
+              style={{ animationDelay: impactInView ? '0.2s' : '0s' }}>
               <div className="text-3xl sm:text-4xl font-bold text-green-500 mb-2">95%</div>
               <div className="text-sm sm:text-base text-gray-600 font-medium">Success Rate</div>
             </div>
             <div className={`bg-white rounded-2xl p-4 sm:p-6 shadow-lg ${impactInView ? 'animate-fade-up' : 'opacity-0'}`}
-                 style={{ animationDelay: impactInView ? '0.3s' : '0s' }}>
+              style={{ animationDelay: impactInView ? '0.3s' : '0s' }}>
               <div className="text-3xl sm:text-4xl font-bold text-red-500 mb-2">4.9/5</div>
               <div className="text-sm sm:text-base text-gray-600 font-medium">Average Rating</div>
             </div>
@@ -255,7 +255,7 @@ export default function AboutPage() {
             </div>
 
             <div className={`bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 sm:p-8 ${featuresInView ? 'animate-fade-right' : 'opacity-0'}`}
-                 style={{ animationDelay: featuresInView ? '0.1s' : '0s' }}>
+              style={{ animationDelay: featuresInView ? '0.1s' : '0s' }}>
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-blue-500 rounded-xl flex items-center justify-center">
                   <MessageCircle className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
@@ -270,7 +270,7 @@ export default function AboutPage() {
             </div>
 
             <div className={`bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 sm:p-8 ${featuresInView ? 'animate-fade-left' : 'opacity-0'}`}
-                 style={{ animationDelay: featuresInView ? '0.2s' : '0s' }}>
+              style={{ animationDelay: featuresInView ? '0.2s' : '0s' }}>
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-green-500 rounded-xl flex items-center justify-center">
                   <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
@@ -285,7 +285,7 @@ export default function AboutPage() {
             </div>
 
             <div className={`bg-gradient-to-br from-orange-50 to-yellow-50 rounded-2xl p-6 sm:p-8 ${featuresInView ? 'animate-fade-right' : 'opacity-0'}`}
-                 style={{ animationDelay: featuresInView ? '0.3s' : '0s' }}>
+              style={{ animationDelay: featuresInView ? '0.3s' : '0s' }}>
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-orange-500 rounded-xl flex items-center justify-center">
                   <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
@@ -301,90 +301,89 @@ export default function AboutPage() {
           </div>
         </div>
 
-       {/* Learning Journey Section */}
-<div
-  ref={journeyRef}
-  className="relative rounded-3xl p-8 sm:p-12 text-white mb-12 sm:mb-20 overflow-hidden"
->
-  {/* Background: Image + Gradient Overlay */}
-  <div
-    className="absolute inset-0 bg-cover bg-center"
-    style={{
-      backgroundImage: `
+        {/* Learning Journey Section */}
+        <div
+          ref={journeyRef}
+          className="relative rounded-3xl p-8 sm:p-12 text-white mb-12 sm:mb-20 overflow-hidden"
+        >
+          {/* Background: Image + Gradient Overlay */}
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `
         linear-gradient(to right, rgba(128,0,255,0.75), rgba(255,0,128,0.75)),
         url('https://images.pexels.com/photos/32417518/pexels-photo-32417518.jpeg')
       `,
-    }}
-  />
+            }}
+          />
 
-  {/* Content */}
-  <div className="relative z-10">
-    <h2
-      className={`text-3xl sm:text-4xl font-bold mb-8 sm:mb-12 text-center ${
-        journeyInView ? "animate-fade-down" : "opacity-0"
-      }`}
-    >
-      Your Learning Journey
-    </h2>
+          {/* Content */}
+          <div className="relative z-10">
+            <h2
+              className={`text-3xl sm:text-4xl font-bold mb-8 sm:mb-12 text-center ${journeyInView ? "animate-fade-down" : "opacity-0"
+                }`}
+            >
+              Your Learning Journey
+            </h2>
 
-    <div className="grid md:grid-cols-4 gap-6 sm:gap-8">
+            <div className="grid md:grid-cols-4 gap-6 sm:gap-8">
 
-      {/* Step 1 */}
-      <div className={`text-center ${journeyInView ? "animate-fade-up" : "opacity-0"}`}>
-        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
-          <span className="text-2xl sm:text-3xl font-bold">1</span>
+              {/* Step 1 */}
+              <div className={`text-center ${journeyInView ? "animate-fade-up" : "opacity-0"}`}>
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl sm:text-3xl font-bold">1</span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold mb-2">Choose Your Level</h3>
+                <p className="text-sm sm:text-base text-white/90">
+                  Start from beginner, intermediate, or advanced based on your current knowledge
+                </p>
+              </div>
+
+              {/* Step 2 */}
+              <div
+                className={`text-center ${journeyInView ? "animate-fade-up" : "opacity-0"}`}
+                style={{ animationDelay: journeyInView ? "0.1s" : "0s" }}
+              >
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl sm:text-3xl font-bold">2</span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold mb-2">Learn & Practice</h3>
+                <p className="text-sm sm:text-base text-white/90">
+                  Follow structured lessons with videos, exercises, and interactive activities
+                </p>
+              </div>
+
+              {/* Step 3 */}
+              <div
+                className={`text-center ${journeyInView ? "animate-fade-up" : "opacity-0"}`}
+                style={{ animationDelay: journeyInView ? "0.2s" : "0s" }}
+              >
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl sm:text-3xl font-bold">3</span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold mb-2">Get Feedback</h3>
+                <p className="text-sm sm:text-base text-white/90">
+                  Receive personalized feedback from instructors on your speaking and writing
+                </p>
+              </div>
+
+              {/* Step 4 */}
+              <div
+                className={`text-center ${journeyInView ? "animate-fade-up" : "opacity-0"}`}
+                style={{ animationDelay: journeyInView ? "0.3s" : "0s" }}
+              >
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl sm:text-3xl font-bold">4</span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold mb-2">Earn Certificate</h3>
+                <p className="text-sm sm:text-base text-white/90">
+                  Complete your course and receive a recognized certificate of completion
+                </p>
+              </div>
+
+            </div>
+          </div>
         </div>
-        <h3 className="text-lg sm:text-xl font-bold mb-2">Choose Your Level</h3>
-        <p className="text-sm sm:text-base text-white/90">
-          Start from beginner, intermediate, or advanced based on your current knowledge
-        </p>
-      </div>
-
-      {/* Step 2 */}
-      <div
-        className={`text-center ${journeyInView ? "animate-fade-up" : "opacity-0"}`}
-        style={{ animationDelay: journeyInView ? "0.1s" : "0s" }}
-      >
-        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
-          <span className="text-2xl sm:text-3xl font-bold">2</span>
-        </div>
-        <h3 className="text-lg sm:text-xl font-bold mb-2">Learn & Practice</h3>
-        <p className="text-sm sm:text-base text-white/90">
-          Follow structured lessons with videos, exercises, and interactive activities
-        </p>
-      </div>
-
-      {/* Step 3 */}
-      <div
-        className={`text-center ${journeyInView ? "animate-fade-up" : "opacity-0"}`}
-        style={{ animationDelay: journeyInView ? "0.2s" : "0s" }}
-      >
-        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
-          <span className="text-2xl sm:text-3xl font-bold">3</span>
-        </div>
-        <h3 className="text-lg sm:text-xl font-bold mb-2">Get Feedback</h3>
-        <p className="text-sm sm:text-base text-white/90">
-          Receive personalized feedback from instructors on your speaking and writing
-        </p>
-      </div>
-
-      {/* Step 4 */}
-      <div
-        className={`text-center ${journeyInView ? "animate-fade-up" : "opacity-0"}`}
-        style={{ animationDelay: journeyInView ? "0.3s" : "0s" }}
-      >
-        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
-          <span className="text-2xl sm:text-3xl font-bold">4</span>
-        </div>
-        <h3 className="text-lg sm:text-xl font-bold mb-2">Earn Certificate</h3>
-        <p className="text-sm sm:text-base text-white/90">
-          Complete your course and receive a recognized certificate of completion
-        </p>
-      </div>
-
-    </div>
-  </div>
-</div>
 
 
         {/* Team & Support Section */}
@@ -418,7 +417,7 @@ export default function AboutPage() {
           </div>
 
           <div className={`bg-white rounded-2xl p-6 sm:p-8 shadow-lg ${teamInView ? 'animate-fade-right' : 'opacity-0'}`}
-               style={{ animationDelay: teamInView ? '0.1s' : '0s' }}>
+            style={{ animationDelay: teamInView ? '0.1s' : '0s' }}>
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-teal-500 rounded-xl flex items-center justify-center">
                 <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
@@ -455,10 +454,10 @@ export default function AboutPage() {
             Start your free trial today!
           </p>
           <Link to="/contact">
-          <button className="bg-white text-orange-500 px-8 py-3 sm:px-10 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg">
-            Get Started
-          </button></Link>
-          
+            <button className="bg-white text-orange-500 px-8 py-3 sm:px-10 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg">
+              Get Started
+            </button></Link>
+
         </div>
       </div>
     </div>

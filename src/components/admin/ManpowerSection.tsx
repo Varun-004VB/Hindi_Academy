@@ -364,7 +364,7 @@ const ManpowerSection: React.FC = () => {
     const siteFinancials = calculateSiteFinancials();
 
     return (
-        <div className="relative bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex h-[750px] w-full mt-4">
+        <div className="relative bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col md:flex-row min-h-[800px] w-full mt-4">
             {loading && (
                 <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-50 flex items-center justify-center">
                     <div className="flex flex-col items-center gap-4">

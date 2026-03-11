@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -6,6 +6,18 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
+  // --- Live Class Check ---
+  const isAdmin = localStorage.getItem('admin') === 'true';
+  const isLoggedIn = isAdmin || localStorage.getItem('userLoggedIn') === 'true';
+  const userEmail = localStorage.getItem('userEmail');
+  const isLiveActive = localStorage.getItem('isLiveActive') === 'true';
+
+  const handleLogout = () => {
+    localStorage.removeItem('userLoggedIn');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('admin');
+    window.location.href = '/';
+  };
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -31,11 +43,11 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2">
-             <div className="flex items-center">
-       <img
-  src="/indian-flag.jpg"
-  alt="Raanuva Veeran Logo"
-  className="
+              <div className="flex items-center">
+                <img
+                  src="/indian-flag.jpg"
+                  alt="Raanuva Veeran Logo"
+                  className="
     w-12 h-12              /* Mobile */
     sm:w-16 sm:h-16        /* Small screens */
     md:w-20 md:h-20        /* Tablet */
@@ -44,9 +56,9 @@ export default function Header() {
     transition-transform duration-300
     hover:scale-105
   "
-/>
+                />
 
-          </div>
+              </div>
 
               <span className="text-xl font-bold text-white">Raanuva Veeran</span>
             </Link>
@@ -89,22 +101,56 @@ export default function Header() {
               >
                 Contact
               </Link>
+              {isLoggedIn && (
+                <Link
+                  to={isLiveActive ? "#" : "/courses"}
+                  onClick={(e) => {
+                    if (isLiveActive) {
+                      e.preventDefault();
+                      window.open('https://googlemeeting.vercel.app/', '_blank');
+                    }
+                  }}
+                  className={`${isActive("/live") ? "text-purple-300" : "hover:text-purple-300"} transition-colors font-medium flex items-center gap-2`}
+                >
+                  Meeting Engine
+                  {isLiveActive && (
+                    <span className="flex h-2 w-2 relative">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                    </span>
+                  )}
+                </Link>
+              )}
             </nav>
 
             {/* Buttons */}
-            <div className="hidden md:flex items-center gap-4">
-              <Link
-                  to="/auth">
-              <button className="text-white hover:text-purple-300 transition-colors font-medium">
-                Login
-              </button>
-              </Link>
-             <Link to="/courses">
-            <button className="bg-gradient-to-r from-purple-500 to-purple-700 text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all transform hover:scale-105">
-              Get Started
-            </button>
-          </Link>
-
+            <div className="hidden md:flex items-center gap-6">
+              {!isLoggedIn ? (
+                <>
+                  <Link to="/auth">
+                    <button className="text-white hover:text-purple-300 transition-colors font-medium">
+                      Login
+                    </button>
+                  </Link>
+                  <Link to="/courses">
+                    <button className="bg-gradient-to-r from-purple-500 to-purple-700 text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all transform hover:scale-105">
+                      Get Started
+                    </button>
+                  </Link>
+                </>
+              ) : (
+                <div className="flex items-center gap-4">
+                  <span className="text-white font-medium bg-purple-800/50 px-3 py-1 rounded-full border border-purple-500/30">
+                    Hi, {isAdmin ? "Admin" : userEmail?.split('@')[0]}
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    className="text-white hover:text-red-300 transition-colors font-medium border border-white/20 px-4 py-1.5 rounded-full hover:bg-white/10"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
@@ -162,16 +208,56 @@ export default function Header() {
                 >
                   Contact
                 </Link>
+                {isLoggedIn && (
+                  <Link
+                    to={isLiveActive ? "#" : "/courses"}
+                    onClick={(e) => {
+                      setIsMenuOpen(false);
+                      if (isLiveActive) {
+                        e.preventDefault();
+                        window.open('https://googlemeeting.vercel.app/', '_blank');
+                      }
+                    }}
+                    className={`${isActive("/live") ? "text-purple-300" : "hover:text-purple-300"} py-2 flex items-center gap-2`}
+                  >
+                    Meeting Engine
+                    {isLiveActive && (
+                      <span className="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded font-bold animate-pulse">
+                        LIVE NOW
+                      </span>
+                    )}
+                  </Link>
+                )}
+
+
 
                 <div className="flex flex-col gap-3 pt-4 border-t border-purple-700/30">
-                <Link to='/auth'>
-                  <button className="text-white hover:text-purple-300 py-2 text-left">
-                    Login
-                  </button>
-                  </Link>
-                  <button className="bg-gradient-to-r from-purple-500 to-purple-700 text-white px-6 py-3 rounded-full font-semibold">
-                    Get Started
-                  </button>
+                  {!isLoggedIn ? (
+                    <>
+                      <Link to='/auth' onClick={() => setIsMenuOpen(false)}>
+                        <button className="text-white hover:text-purple-300 py-2 text-left">
+                          Login
+                        </button>
+                      </Link>
+                      <Link to='/courses' onClick={() => setIsMenuOpen(false)}>
+                        <button className="bg-gradient-to-r from-purple-500 to-purple-700 text-white px-6 py-3 rounded-full font-semibold w-full text-center">
+                          Get Started
+                        </button>
+                      </Link>
+                    </>
+                  ) : (
+                    <div className="flex flex-col gap-3">
+                      <div className="text-purple-200 font-medium px-2">
+                        Logged in as: {isAdmin ? "Admin" : userEmail}
+                      </div>
+                      <button
+                        onClick={handleLogout}
+                        className="bg-red-500/20 text-red-300 border border-red-500/50 px-6 py-3 rounded-full font-semibold hover:bg-red-500/30 transition-all text-center"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
                 </div>
               </nav>
             </div>
