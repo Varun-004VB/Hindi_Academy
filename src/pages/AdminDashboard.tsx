@@ -243,7 +243,7 @@ const AdminDashboard: React.FC = () => {
                   <label className="block text-sm font-bold mb-2">Paste Meeting Link to Start:</label>
                   <div className="flex gap-4">
                     <input
-                      type="text"
+                      type=" text"
                       placeholder="https://api.codingboss.in/app/?room=lus1863cm"
                       className="flex-1 px-4 py-3 rounded-xl text-gray-900 focus:outline-none"
                       value={tempLink}
