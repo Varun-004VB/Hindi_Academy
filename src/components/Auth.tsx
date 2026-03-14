@@ -47,13 +47,15 @@ const Auth: React.FC = () => {
     };
 
     try {
-      const response = await fetch("https://caren-habitudinal-hazardously.ngrok-free.dev/device/register/", {
+      const response = await fetch("https://api.codingboss.in/manpower/signup/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       if (response.ok) {
+        localStorage.setItem("userLoggedIn", "true");
+        localStorage.setItem("userEmail", form.email);
         alert("✅ Registration Successful!");
         setIsLogin(true);
       } else {
@@ -81,6 +83,8 @@ const Auth: React.FC = () => {
 
     if (emailLower === "admin@gmail.com" && passwordTrim === "admin") {
       localStorage.setItem("admin", "true");
+      localStorage.setItem("userLoggedIn", "true");
+      localStorage.setItem("userEmail", "admin@gmail.com");
       navigate("/admin-dashboard");
       return;
     }
@@ -92,7 +96,7 @@ const Auth: React.FC = () => {
     };
 
     try {
-      const response = await fetch("https://caren-habitudinal-hazardously.ngrok-free.dev/device/login/", {
+      const response = await fetch("https://api.codingboss.in/manpower/login/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

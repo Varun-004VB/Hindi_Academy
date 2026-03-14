@@ -13,15 +13,15 @@ export default function Testimonials() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [averageRating] = useState('5.0');
+  const [averageRating] = useState('4.6');
   const [reviewCount] = useState('50,000+');
 
   const fetchedTestimonials = [
     {
-      name: 'Student A',
+      name: 's.m. silambarasan',
       role: 'Spoken Hindi Learner',
-      image: 'https://img.freepik.com/premium-photo/indian-girl-cheerful-studio-portrait_53876-55599.jpg?semt=ais_hybrid&w=740&q=80',
-      text: 'Excellent Spoken Hindi Centre. Since the Tutor is Ex-Army man, he taught us very practical way of speaking such as Native speaker not only that u will understand culture and high  standards of Hindi also. VERY WORTHY.',
+      image: '',
+      text: 'Excellent teaching methodology, making complex concepts easy to understand. Encourages active participation and provides equal opportunities to all students. Well-structured lessons and homeworks over all excellent teaching.',
       rating: 5
     },
     {
@@ -85,7 +85,6 @@ export default function Testimonials() {
     );
   }
 
-
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
       <div className="max-w-7xl mx-auto">
@@ -113,11 +112,13 @@ export default function Testimonials() {
                     <Quote className="absolute top-4 right-4 w-12 h-12 text-orange-200" />
 
                     <div className="flex items-center gap-4 mb-6">
-                      <img
-                        src={testimonial.image}
-                        alt={testimonial.name}
-                        className="w-16 h-16 rounded-full object-cover border-4 border-orange-200"
-                      />
+                      {testimonial.image && (
+                        <img
+                          src={testimonial.image}
+                          alt={testimonial.name}
+                          className="w-16 h-16 rounded-full object-cover border-4 border-orange-200"
+                        />
+                      )}
                       <div>
                         <h4 className="font-bold text-gray-900 text-lg">
                           {testimonial.name}
@@ -168,11 +169,13 @@ export default function Testimonials() {
               <Quote className="absolute top-4 right-4 w-12 h-12 text-orange-200" />
 
               <div className="flex items-center gap-4 mb-6">
-                <img
-                  src={testimonial.image}
-                  alt={testimonial.name}
-                  className="w-16 h-16 rounded-full object-cover border-4 border-orange-200"
-                />
+                {testimonial.image && (
+                  <img
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    className="w-16 h-16 rounded-full object-cover border-4 border-orange-200"
+                  />
+                )}
                 <div>
                   <h4 className="font-bold text-gray-900 text-lg">
                     {testimonial.name}

@@ -59,6 +59,19 @@ function AnimatedSection({
 export default function Hero({ onOpenModal }: HeroProps) {
   const navigate = useNavigate();
 
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const heroImages = [
+    '/hero-army.jpg',
+    '/indian-flag.jpg',
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [heroImages.length]);
+
   return (
     <div className="relative overflow-hidden">
       {/* HERO SECTION - NEW MODERN THEME */}
@@ -172,19 +185,38 @@ export default function Hero({ onOpenModal }: HeroProps) {
               </AnimatedSection>
             </div>
 
-            {/* RIGHT IMAGE - With Glow Effect */}
+            {/* RIGHT IMAGE - With Slider and Glow Effect */}
             <AnimatedSection direction="right" delay={400}>
-              <div className="relative group perspective-1000">
+              <div className="relative group perspective-1000 h-[300px] sm:h-[400px] md:h-[500px]">
                 {/* Behind glow */}
                 <div className="absolute -inset-4 bg-gradient-to-r from-purple-600 via-cyan-600 to-purple-600 rounded-[2.5rem] blur-2xl opacity-30 group-hover:opacity-50 transition duration-1000 animate-tilt"></div>
 
-                <img
-                  src="/image.png"
-                  className="relative rounded-[2rem] shadow-2xl border border-white/10 z-10 object-cover w-full h-full transform transition duration-500 group-hover:scale-[1.01]"
-                  alt="Students learning"
-                />
+                <div className="relative h-full w-full rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl z-10">
+                  {heroImages.map((src, index) => (
+                    <img
+                      key={src}
+                      src={src}
+                      className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out transform ${index === currentImageIndex
+                          ? "opacity-100 scale-100"
+                          : "opacity-0 scale-110"
+                        }`}
+                      alt={`Hero Slide ${index + 1}`}
+                    />
+                  ))}
+                </div>
 
-
+                {/* Slider Indicators */}
+                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+                  {heroImages.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${index === currentImageIndex ? "w-8 bg-white" : "w-2 bg-white/40"
+                        }`}
+                      aria-label={`Go to slide ${index + 1}`}
+                    />
+                  ))}
+                </div>
               </div>
             </AnimatedSection>
           </div>

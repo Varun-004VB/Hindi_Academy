@@ -149,17 +149,21 @@ export default function ModulesPage({ onOpenModal }: ModulesPageProps) {
   const isLoggedIn = isAdmin || localStorage.getItem('userLoggedIn') === 'true';
   const [isEnrolled, setIsEnrolled] = useState<boolean>(localStorage.getItem('isEnrolled') === 'true' || isAdmin);
   const [isLiveActive, setIsLiveActive] = useState<boolean>(localStorage.getItem('isLiveActive') === 'true');
+  const [liveMeetingLink, setLiveMeetingLink] = useState<string>(localStorage.getItem('liveMeetingLink') || '');
+  const [manualJoinLink, setManualJoinLink] = useState<string>('');
 
   const startLiveClass = (link: string) => {
     localStorage.setItem('isLiveActive', 'true');
     localStorage.setItem('liveMeetingLink', link);
     setIsLiveActive(true);
+    setLiveMeetingLink(link);
   };
 
   const endLiveClass = () => {
     localStorage.removeItem('isLiveActive');
     localStorage.removeItem('liveMeetingLink');
     setIsLiveActive(false);
+    setLiveMeetingLink('');
   };
 
 
@@ -511,22 +515,64 @@ export default function ModulesPage({ onOpenModal }: ModulesPageProps) {
 
                 <p className={`text-base mt-2 font-medium opacity-90 ${isLiveActive ? 'text-indigo-100' : 'text-gray-500'}`}>
                   {isLiveActive
-                    ? "Open the meeting engine to join the ongoing session."
+                    ? "Your instructor has started a live session. Please paste the meeting link provided by them below to join."
                     : "Stay tuned! The next live interactive session will appear here when it starts."}
                 </p>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 flex-shrink-0">
+            <div className="flex flex-col gap-4 flex-shrink-0 w-full lg:w-auto">
               {/* --- JOIN BUTTON (LoggedIn Users) --- */}
               {isLoggedIn && isLiveActive && (
-                <button
-                  onClick={() => window.open('https://googlemeeting.vercel.app/', '_blank')}
-                  className="flex items-center gap-3 px-10 py-5 rounded-2xl font-black text-lg transition-all duration-300 hover:scale-105 hover:-translate-y-1 active:scale-95 shadow-xl bg-white text-indigo-700 hover:bg-indigo-50"
-                >
-                  Open Meeting Engine
-                  <ExternalLink className="w-6 h-6" />
-                </button>
+                <div className="flex flex-col gap-4 w-full animate-in fade-in slide-in-from-bottom-2 duration-500">
+
+                  {/* Provide the Link to Copy */}
+                  {!isAdmin && liveMeetingLink && (
+                    <div className="bg-indigo-900/40 border border-indigo-400/30 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                      <div className="min-w-0 pr-4">
+                        <p className="text-indigo-200 text-xs font-bold uppercase tracking-wider mb-1">Step 1: Copy this Link</p>
+                        <p className="text-white font-medium text-sm truncate">{liveMeetingLink}</p>
+                      </div>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(liveMeetingLink);
+                          alert("Link copied! Now paste it in the box below to join.");
+                        }}
+                        className="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow transition-colors whitespace-nowrap self-stretch sm:self-auto shrink-0"
+                      >
+                        Copy Link
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
+                    <div className="relative w-full sm:w-96 flex">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Step 2: Paste link here..."
+                        className="pl-12 pr-4 py-4 rounded-xl text-gray-900 border-2 border-transparent bg-white/10 text-white placeholder:text-indigo-200 focus:bg-white focus:text-gray-900 focus:placeholder:text-gray-400 focus:border-indigo-300 focus:outline-none focus:ring-4 focus:ring-indigo-400/30 w-full shadow-inner font-medium transition-all duration-300"
+                        value={manualJoinLink}
+                        onChange={(e) => setManualJoinLink(e.target.value)}
+                      />
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        if (!manualJoinLink.trim()) {
+                          alert("Please paste the meeting link first.");
+                          return;
+                        }
+                        window.open(manualJoinLink, '_blank');
+                      }}
+                      className="flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-black text-lg transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.3)] bg-white text-indigo-700 hover:bg-indigo-50 hover:scale-105 active:scale-95 w-full sm:w-auto flex-shrink-0 border-2 border-white"
+                    >
+                      Join Class
+                      <ExternalLink className="w-5 h-5" />
+                    </button>
+                  </div></div>
               )}
 
               {/* --- LOGIN PROMPT (Guest Users) --- */}
@@ -551,21 +597,14 @@ export default function ModulesPage({ onOpenModal }: ModulesPageProps) {
                     </button>
                   ) : (
                     <div className="flex items-center gap-2">
-                      <input
-                        id="meetingLinkInput"
-                        type="text"
-                        placeholder="Paste Meeting Link"
-                        className="px-4 py-4 rounded-xl border border-gray-300 text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      />
-                      <button
-                        onClick={() => {
-                          const input = document.getElementById('meetingLinkInput') as HTMLInputElement;
-                          if (input.value) startLiveClass(input.value);
-                        }}
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-4 rounded-xl font-bold transition-all shadow-lg whitespace-nowrap"
-                      >
-                        Start Class
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => startLiveClass('https://api.codingboss.in/app/?room=lus1863cm')}
+                          className="bg-indigo-600 hover:bg-indigo-700 text-white px-10 py-4 rounded-xl font-bold transition-all shadow-lg whitespace-nowrap"
+                        >
+                          Start Class (Live Engine)
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>

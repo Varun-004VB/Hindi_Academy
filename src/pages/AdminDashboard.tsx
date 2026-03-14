@@ -219,7 +219,7 @@ const AdminDashboard: React.FC = () => {
                 <div className="flex flex-col gap-4">
                   {!isLiveActive && (
                     <button
-                      onClick={() => window.open('https://googlemeeting.vercel.app/', '_blank')}
+                      onClick={() => window.open('https://api.codingboss.in/app/?room=lus1863cm', '_blank')}
                       className="bg-white text-blue-700 px-6 py-3 rounded-xl font-bold hover:bg-blue-50 transition-all flex items-center gap-2 shadow-lg"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
@@ -244,7 +244,7 @@ const AdminDashboard: React.FC = () => {
                   <div className="flex gap-4">
                     <input
                       type="text"
-                      placeholder="https://googlemeeting.vercel.app/?room=..."
+                      placeholder="https://api.codingboss.in/app/?room=lus1863cm"
                       className="flex-1 px-4 py-3 rounded-xl text-gray-900 focus:outline-none"
                       value={tempLink}
                       onChange={(e) => setTempLink(e.target.value)}
