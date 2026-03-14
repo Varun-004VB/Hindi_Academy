@@ -238,7 +238,7 @@ const AdminDashboard: React.FC = () => {
                 </div>
               </div>
 
-              {!isLiveActive && (
+              {!isLiveActive  && (
                 <div className="mt-8 pt-8 border-t border-white/20">
                   <label className="block text-sm font-bold mb-2">Paste Meeting Link to Start:</label>
                   <div className="flex gap-4">
