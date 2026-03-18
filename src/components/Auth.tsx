@@ -126,7 +126,7 @@ const Auth: React.FC = () => {
           style={{
             backgroundImage: `
               linear-gradient(to bottom, rgba(168,85,247,0.7), rgba(219,39,119,0.7)),
-              url('https://images.pexels.com/photos/5082561/pexels-photo-5082561.jpeg')
+              url('https://i.pinimg.com/736x/a1/ca/ea/a1caead725be9f9e5b53852ae1c3ebc9.jpg')
             `,
           }}
         />

@@ -22,13 +22,15 @@ const HARDCODED_CATEGORIES = [
     { name: 'Mason (Best)', hourly: 110 }
 ];
 
+const BASE_URL = 'https://api.codingboss.in/manpower';
+
 const ManpowerSection: React.FC = () => {
     const [activeTab, setActiveTab] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(true);
 
     const fetchData = async (endpoint: string, setter: (data: any) => void) => {
         try {
-            const res = await fetch(`https://caren-habitudinal-hazardously.ngrok-free.dev/manpower/${endpoint}/`);
+            const res = await fetch(`${BASE_URL}/${endpoint}/`);
             const data = await res.json();
             setter(data);
         } catch (err) {
@@ -78,7 +80,7 @@ const ManpowerSection: React.FC = () => {
     const deleteItem = async (endpoint: string, id: number, setter: React.Dispatch<React.SetStateAction<any[]>>) => {
         if (!window.confirm("Are you sure you want to delete this record?")) return;
         try {
-            const res = await fetch(`https://caren-habitudinal-hazardously.ngrok-free.dev/manpower/${endpoint}/${id}/`, {
+            const res = await fetch(`${BASE_URL}/${endpoint}/${id}/`, {
                 method: 'DELETE',
             });
             if (res.ok) {
@@ -157,7 +159,7 @@ const ManpowerSection: React.FC = () => {
             site_location: formData.site_location,
         };
         try {
-            const res = await fetch('https://caren-habitudinal-hazardously.ngrok-free.dev/manpower/owners/', {
+            const res = await fetch(`${BASE_URL}/owners/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -189,7 +191,7 @@ const ManpowerSection: React.FC = () => {
             expected_end_date: formData.expected_end_date,
         };
         try {
-            const res = await fetch('https://caren-habitudinal-hazardously.ngrok-free.dev/manpower/sites/', {
+            const res = await fetch(`${BASE_URL}/sites/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -212,7 +214,7 @@ const ManpowerSection: React.FC = () => {
 
     const submitWorker = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         // Ensure we have a numeric category ID
         let categoryId = Number(formData.category);
         if (!categoryId && formData.category_static_name) {
@@ -233,7 +235,7 @@ const ManpowerSection: React.FC = () => {
             is_active: true,
         };
         try {
-            const res = await fetch('https://caren-habitudinal-hazardously.ngrok-free.dev/manpower/workers/', {
+            const res = await fetch(`${BASE_URL}/workers/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -268,7 +270,7 @@ const ManpowerSection: React.FC = () => {
             duty: duty
         };
         try {
-            const res = await fetch('https://caren-habitudinal-hazardously.ngrok-free.dev/manpower/attendance/', {
+            const res = await fetch(`${BASE_URL}/attendance/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -304,7 +306,7 @@ const ManpowerSection: React.FC = () => {
             worker_paid_amount: Number(formData.worker_paid_amount),
         };
         try {
-            const res = await fetch('https://caren-habitudinal-hazardously.ngrok-free.dev/manpower/work-entries/', {
+            const res = await fetch(`${BASE_URL}/work-entries/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -332,7 +334,7 @@ const ManpowerSection: React.FC = () => {
             note: formData.note || '',
         };
         try {
-            const res = await fetch('https://caren-habitudinal-hazardously.ngrok-free.dev/manpower/advances/', {
+            const res = await fetch(`${BASE_URL}/advances/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -361,7 +363,7 @@ const ManpowerSection: React.FC = () => {
             note: formData.note || '',
         };
         try {
-            const res = await fetch('https://caren-habitudinal-hazardously.ngrok-free.dev/manpower/expenses/', {
+            const res = await fetch(`${BASE_URL}/expenses/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -390,7 +392,7 @@ const ManpowerSection: React.FC = () => {
             note: formData.note || '',
         };
         try {
-            const res = await fetch('https://caren-habitudinal-hazardously.ngrok-free.dev/manpower/owner-payments/', {
+            const res = await fetch(`${BASE_URL}/owner-payments/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -419,7 +421,7 @@ const ManpowerSection: React.FC = () => {
             note: formData.note || '',
         };
         try {
-            const res = await fetch('https://caren-habitudinal-hazardously.ngrok-free.dev/manpower/transactions/', {
+            const res = await fetch(`${BASE_URL}/transactions/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -517,27 +519,113 @@ const ManpowerSection: React.FC = () => {
 
     const siteFinancials = calculateSiteFinancials();
 
-    const generatePDF = (title: string, columns: string[], data: any[][], fileName: string) => {
+    const generatePDF = (title: string, columns: string[], data: any[][], fileName: string, siteName?: string) => {
         const doc = new jsPDF();
-        doc.setFontSize(18);
-        doc.text(title, 14, 22);
-        doc.setFontSize(11);
-        doc.setTextColor(100);
-        doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 30);
+        const pageWidth = doc.internal.pageSize.width;
+
+        // --- Header Section ---
+        doc.setFillColor(31, 41, 55); // Dark Gray / Slate
+        doc.rect(0, 0, 210, 40, 'F');
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(22);
+        doc.setFont("helvetica", "bold");
+        doc.text("HINDI ACADEMY", pageWidth / 2, 20, { align: 'center' });
+
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.text("CONSTRUCTION DIVISION • MANPOWER & SITE MANAGEMENT", pageWidth / 2, 28, { align: 'center' });
+
+        // --- Report Info ---
+        doc.setTextColor(31, 41, 55);
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text(title.toUpperCase(), 15, 50);
+
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(100, 100, 100);
+        doc.text(`Generated on: ${new Date().toLocaleString()}`, 15, 56);
+        if (siteName) {
+            doc.text(`Site: ${siteName}`, 150, 56);
+        }
+        doc.text(`Report ID: HA-CONST-${Math.floor(Math.random() * 10000)}`, 15, 61);
+
+        // --- Table Section ---
+        const columnStyles: { [key: number]: any } = {};
+        columns.forEach((col, index) => {
+            const lowCol = col.toLowerCase();
+            if (lowCol.includes('date')) {
+                columnStyles[index] = { cellWidth: 25, halign: 'center' };
+            } else if (lowCol.includes('amount') || lowCol.includes('billed') || lowCol.includes('paid') || lowCol.includes('balance') || lowCol.includes('salary') || lowCol.includes('income') || lowCol.includes('outflow') || lowCol.includes('profit')) {
+                columnStyles[index] = { cellWidth: 28, halign: 'right' };
+            } else if (lowCol.includes('hrs') || lowCol.includes('duty') || lowCol.includes('status')) {
+                columnStyles[index] = { cellWidth: 15, halign: 'center' };
+            } else if (lowCol.includes('type')) {
+                columnStyles[index] = { cellWidth: 25 };
+            } else {
+                columnStyles[index] = { cellWidth: 'auto' }; // Site, Worker, Note take remaining space
+            }
+        });
 
         autoTable(doc, {
             head: [columns],
             body: data,
-            startY: 35,
+            startY: 68,
             theme: 'striped',
-            headStyles: { fillColor: [37, 99, 235] },
+            headStyles: {
+                fillColor: [37, 99, 235],
+                fontSize: 10,
+                cellPadding: 4,
+                halign: 'inherit'
+            },
+            bodyStyles: {
+                fontSize: 9,
+                cellPadding: 3,
+                valign: 'middle'
+            },
+            columnStyles: columnStyles,
+            alternateRowStyles: {
+                fillColor: [249, 250, 251]
+            },
+            margin: { left: 15, right: 15 },
+            didDrawCell: (data) => {
+                // Colorize income/outflow values in Amount column
+                if (data.section === 'body' && data.column.index === columns.length - 1) {
+                    const text = data.cell.text[0];
+                    if (text.includes('+')) {
+                        doc.setTextColor(22, 163, 74); // Green
+                    } else if (text.includes('-')) {
+                        doc.setTextColor(220, 38, 38); // Red
+                    }
+                }
+            }
         });
+
+        // --- Totals Row (Optional Calculation) ---
+        const lastY = (doc as any).lastAutoTable.finalY + 10;
+
+        // --- Footer / Signatures ---
+        const pageHeight = doc.internal.pageSize.height;
+        doc.setDrawColor(200, 200, 200);
+        doc.line(15, lastY + 20, 75, lastY + 20);
+        doc.line(135, lastY + 20, 195, lastY + 20);
+
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        doc.text("AUTHORIZED SIGNATORY", 30, lastY + 25);
+        doc.text("VERIFIED BY ADMIN", 155, lastY + 25);
+
+        doc.setFontSize(7);
+        doc.text("This is a computer-generated report and remains the property of Hindi Academy Construction Division.", 15, pageHeight - 10);
+        doc.text(`Page ${doc.internal.getNumberOfPages()}`, 190, pageHeight - 10);
 
         window.open(doc.output('bloburl'), '_blank');
     };
 
     const [workerSearchId, setWorkerSearchId] = useState<number | null>(null);
     const [workerSearchSiteId, setWorkerSearchSiteId] = useState<number | null>(null);
+    const [summaryStartDate, setSummaryStartDate] = useState(new Date().toISOString().split('T')[0]);
 
     const getWorkerSalarySummary = () => {
         if (!workerSearchId || !workerSearchSiteId) return null;
@@ -545,12 +633,27 @@ const ManpowerSection: React.FC = () => {
         const site = sites.find(s => s.id === workerSearchSiteId);
         if (!worker || !site) return null;
 
-        const workerAttendances = attendances.filter(a => a.worker === workerSearchId && a.site === workerSearchSiteId);
+        const start = new Date(summaryStartDate);
+        const end = new Date(start);
+        end.setDate(end.getDate() + 6);
+
+        const workerAttendances = attendances.filter(a => {
+            const d = new Date(a.date);
+            return a.worker === workerSearchId && a.site === workerSearchSiteId && d >= start && d <= end;
+        });
+
+        const workerAdvances = advances.filter(adv => {
+            const d = new Date(adv.given_date);
+            return adv.worker === workerSearchId && d >= start && d <= end;
+        });
+
         const totalHours = workerAttendances.reduce((sum, a) => sum + (a.hours || 0), 0);
         const totalDuty = workerAttendances.reduce((sum, a) => sum + (a.duty || (a.hours ? a.hours / 8 : 0)), 0);
-        const salary = totalDuty * worker.daily_wage;
+        const grossSalary = totalDuty * worker.daily_wage;
+        const totalAdvances = workerAdvances.reduce((sum, adv) => sum + adv.amount, 0);
+        const netSalary = grossSalary - totalAdvances;
 
-        return { worker, site, totalHours, totalDuty, salary, workerAttendances };
+        return { worker, site, totalHours, totalDuty, grossSalary, totalAdvances, netSalary, workerAttendances, workerAdvances, start, end };
     };
 
     const workerSummary = getWorkerSalarySummary();
@@ -585,94 +688,135 @@ const ManpowerSection: React.FC = () => {
 
                 {/* 1. OWNERS */}
                 {activeTab === 0 && (
-                    <div className="max-w-3xl">
-                        <h3 className="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-3">
-                            <span className="p-2 bg-blue-50 text-blue-600 rounded-lg">👤</span> Create Owner
+                    <div className="max-w-4xl mx-auto">
+                        <h3 className="text-2xl font-black mb-8 text-gray-900 flex items-center gap-3">
+                            <span className="p-2.5 bg-blue-50 text-blue-600 rounded-xl shadow-sm text-lg">👤</span> Manage Project Owners
                         </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-                                <form onSubmit={submitOwner} className="space-y-4">
-                                    <div><label className="block text-sm font-bold mb-1 text-gray-700">Name</label><input required name="name" onChange={handleInputChange} value={formData.name || ''} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20" placeholder="e.g. Ramesh Kumar" /></div>
-                                    <div><label className="block text-sm font-bold mb-1 text-gray-700">Phone</label><input required name="phone" onChange={handleInputChange} value={formData.phone || ''} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20" placeholder="9876543210" /></div>
-                                    <div><label className="block text-sm font-bold mb-1 text-gray-700">Email</label><input required type="email" name="email" onChange={handleInputChange} value={formData.email || ''} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20" placeholder="e.g. ramesh@gmail.com" /></div>
-                                    <div><label className="block text-sm font-bold mb-1 text-gray-700">Address</label><input required name="address" onChange={handleInputChange} value={formData.address || ''} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20" placeholder="e.g. Chennai" /></div>
-                                    <div><label className="block text-sm font-bold mb-1 text-gray-700">Site Location</label><input required name="site_location" onChange={handleInputChange} value={formData.site_location || ''} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20" placeholder="e.g. OMR Chennai" /></div>
-                                    <button type="submit" className="w-full bg-blue-600 text-white rounded-lg py-3 font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-500/20">Register Owner</button>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+                            <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-xl shadow-gray-200/50">
+                                <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-6 border-b border-gray-50 pb-2">Register New Owner</h4>
+                                <form onSubmit={submitOwner} className="space-y-6">
+                                    <div className="grid grid-cols-1 gap-5">
+                                        <div><label className="block text-xs font-black text-gray-500 uppercase mb-1.5 ml-1">Full Name</label><input required name="name" onChange={handleInputChange} value={formData.name || ''} className="w-full border-gray-200 bg-gray-50/30 focus:bg-white rounded-xl px-4 py-3 text-sm transition-all focus:ring-2 focus:ring-blue-500/20" placeholder="e.g. Ramesh Kumar" /></div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div><label className="block text-xs font-black text-gray-500 uppercase mb-1.5 ml-1">Phone</label><input required name="phone" onChange={handleInputChange} value={formData.phone || ''} className="w-full border-gray-200 bg-gray-50/30 focus:bg-white rounded-xl px-4 py-3 text-sm transition-all focus:ring-2 focus:ring-blue-500/20" placeholder="9876543210" /></div>
+                                            <div><label className="block text-xs font-black text-gray-500 uppercase mb-1.5 ml-1">Email</label><input required type="email" name="email" onChange={handleInputChange} value={formData.email || ''} className="w-full border-gray-200 bg-gray-50/30 focus:bg-white rounded-xl px-4 py-3 text-sm transition-all focus:ring-2 focus:ring-blue-500/20" placeholder="ramesh@email.com" /></div>
+                                        </div>
+                                        <div><label className="block text-xs font-black text-gray-500 uppercase mb-1.5 ml-1">Site Location</label><input required name="site_location" onChange={handleInputChange} value={formData.site_location || ''} className="w-full border-gray-200 bg-gray-50/30 focus:bg-white rounded-xl px-4 py-3 text-sm transition-all focus:ring-2 focus:ring-blue-500/20" placeholder="e.g. OMR Chennai" /></div>
+                                    </div>
+                                    <button type="submit" className="w-full bg-blue-600 text-white rounded-xl py-4 font-black hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20">Confirm Registration</button>
                                 </form>
                             </div>
-                            <div className="bg-gray-50/50 p-6 rounded-xl border border-gray-100 overflow-x-auto">
-                                <h4 className="font-bold text-gray-500 mb-4 uppercase text-xs tracking-wider">Registered Owners</h4>
-                                <table className="w-full text-left">
-                                    <thead className="border-b border-gray-200">
-                                        <tr className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                                            <th className="pb-3 text-center">Name</th>
-                                            <th className="pb-3 text-center">Site Location</th>
-                                            <th className="pb-3 text-right">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-gray-100">
-                                        {owners.map(o => (
-                                            <tr key={o.id} className="text-sm">
-                                                <td className="py-3 font-bold text-gray-700">{o.name}</td>
-                                                <td className="py-3 text-gray-500">{o.site_location}</td>
-                                                <td className="py-3 text-right">
-                                                    <button onClick={() => deleteItem('owners', o.id, setOwners)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
-                                                        🗑️
-                                                    </button>
-                                                </td>
+
+                            <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-xl shadow-gray-200/50">
+                                <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-6 border-b border-gray-50 pb-2">Owner Registry ({owners.length})</h4>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-left">
+                                        <thead>
+                                            <tr className="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50">
+                                                <th className="pb-4">Name</th>
+                                                <th className="pb-4 text-center">Location</th>
+                                                <th className="pb-4 text-right">Action</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                                {owners.length === 0 && <p className="text-gray-400 text-sm italic text-center py-4">No owners found.</p>}
+                                        </thead>
+                                        <tbody className="divide-y divide-gray-50">
+                                            {owners.map(o => (
+                                                <tr key={o.id} className="group hover:bg-blue-50/30 transition-colors">
+                                                    <td className="py-4 font-bold text-gray-800 text-sm">{o.name}</td>
+                                                    <td className="py-4 text-center text-xs text-gray-400 font-medium">{o.site_location}</td>
+                                                    <td className="py-4 text-right">
+                                                        <button onClick={() => deleteItem('owners', o.id, setOwners)} className="p-2 text-gray-300 hover:text-red-500 transition-colors">🗑️</button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                    {owners.length === 0 && <p className="text-gray-400 text-xs italic text-center py-10">Empty owner database.</p>}
+                                </div>
                             </div>
                         </div>
                     </div>
                 )}
 
-                {/* 2. SITES */}
+                {/* 2. MANAGE SITES */}
                 {activeTab === 1 && (
-                    <div className="max-w-4xl mx-auto">
-                        <h3 className="text-xl font-extrabold mb-8 text-gray-900 flex items-center gap-3">
-                            <span className="p-2.5 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white rounded-xl shadow-md shadow-emerald-500/20 text-lg">🏗️</span> Create Site under Owner
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                            <div className="bg-white p-8 rounded-2xl border border-gray-200/60 shadow-lg shadow-gray-100/50">
-                                <form onSubmit={submitSite} className="space-y-6">
-                                    <div className="grid grid-cols-1 gap-6">
-                                        <div>
-                                            <label className="block text-sm font-bold mb-2 text-gray-700">Select Owner</label>
-                                            <select required name="owner" onChange={handleInputChange} value={formData.owner || ''} className="w-full border-gray-200 rounded-lg px-4 py-3 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500/20">
-                                                <option value="">-- Select Owner --</option>
+                    <div className="max-w-6xl mx-auto">
+                        <div className="flex items-center justify-between mb-8 px-2">
+                           <div>
+                                <h3 className="text-2xl font-black text-gray-900 flex items-center gap-3">
+                                    <span className="p-2.5 bg-blue-600 text-white rounded-xl shadow-lg shadow-blue-500/20 text-lg">🚧</span>
+                                    Create Site
+                                </h3>
+                                <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest mt-1 ml-1">New Project Baseline & Record</p>
+                           </div>
+                           <div className="text-right border-l border-gray-100 pl-6 hidden md:block">
+                                <span className="text-3xl font-black text-blue-600 block">{sites.length}</span>
+                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">Live Projects</span>
+                           </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                            {/* Create Site Form */}
+                            <div className="lg:col-span-2 bg-white p-10 rounded-3xl border border-gray-100 shadow-2xl shadow-blue-900/5">
+                                <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-10 border-b border-gray-50 pb-4">Establish New Construction Baseline</h4>
+                                <form onSubmit={submitSite} className="space-y-8">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <div className="space-y-2">
+                                            <label className="block text-xs font-black text-gray-500 uppercase tracking-tighter ml-1">Site Title</label>
+                                            <input required name="site_name" onChange={handleInputChange} value={formData.site_name || ''} className="w-full border-gray-100 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100 rounded-2xl px-5 py-4 text-sm font-medium transition-all" placeholder="e.g. Skyline Heights II" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="block text-xs font-black text-gray-500 uppercase tracking-tighter ml-1">Assigned Owner</label>
+                                            <select required name="owner" onChange={handleInputChange} value={formData.owner || ''} className="w-full border-gray-100 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100 rounded-2xl px-5 py-4 text-sm font-medium transition-all appearance-none cursor-pointer">
+                                                <option value="">-- Choose Dedicated Owner --</option>
                                                 {owners.map(o => <option key={o.id} value={o.id}>{o.name}</option>)}
                                             </select>
                                         </div>
-                                        <div><label className="block text-sm font-bold mb-2 text-gray-700">Site Name</label><input required name="site_name" onChange={handleInputChange} value={formData.site_name || ''} className="w-full border-gray-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500/20" placeholder="e.g. Green Valley Villa" /></div>
+                                        <div className="space-y-2 md:col-span-2">
+                                            <label className="block text-xs font-black text-gray-500 uppercase tracking-tighter ml-1">Physical Site Location</label>
+                                            <input required name="location" onChange={handleInputChange} value={formData.location || ''} className="w-full border-gray-200 bg-gray-50/30 focus:bg-white focus:ring-4 focus:ring-blue-100 rounded-2xl px-5 py-4 text-sm font-medium transition-all" placeholder="Enter Full Address..." />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="block text-xs font-black text-gray-500 uppercase tracking-tighter ml-1">Start Date</label>
+                                            <input required type="date" name="start_date" onChange={handleInputChange} value={formData.start_date || ''} className="w-full border-gray-100 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100 rounded-2xl px-5 py-4 text-sm font-bold text-gray-700 transition-all" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="block text-xs font-black text-gray-500 uppercase tracking-tighter ml-1">Expected End Date</label>
+                                            <input required type="date" name="expected_end_date" onChange={handleInputChange} value={formData.expected_end_date || ''} className="w-full border-gray-100 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100 rounded-2xl px-5 py-4 text-sm font-bold text-gray-700 transition-all" />
+                                        </div>
                                     </div>
-                                    <div><label className="block text-sm font-bold mb-2 text-gray-700">Location</label><input required name="location" onChange={handleInputChange} value={formData.location || ''} className="w-full border-gray-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500/20" placeholder="e.g. OMR Chennai" /></div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div><label className="block text-sm font-bold mb-2 text-gray-700">Start Date</label><input required type="date" name="start_date" onChange={handleInputChange} value={formData.start_date || ''} className="w-full border-gray-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500/20" /></div>
-                                        <div><label className="block text-sm font-bold mb-2 text-gray-700">Expected End Date</label><input required type="date" name="expected_end_date" onChange={handleInputChange} value={formData.expected_end_date || ''} className="w-full border-gray-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500/20" /></div>
+                                    <div className="pt-6">
+                                        <button type="submit" className="w-full bg-blue-600 text-white rounded-2xl py-5 font-black hover:bg-blue-700 hover:shadow-2xl hover:shadow-blue-500/30 transition-all text-sm uppercase tracking-widest shadow-xl shadow-blue-500/20">Establish Site & Launch</button>
                                     </div>
-                                    <button type="submit" className="w-full bg-blue-600 text-white rounded-lg py-4 font-bold hover:bg-blue-700 transition-all shadow-md">Establish New Site</button>
                                 </form>
                             </div>
-                            <div className="bg-white p-7 rounded-2xl border border-gray-200/60 shadow-lg shadow-gray-100/50">
-                                <h4 className="font-bold text-gray-500 mb-4 uppercase text-xs tracking-wider">Active Sites</h4>
-                                <ul className="space-y-2">
-                                    {sites.map(s => (
-                                        <li key={s.id} className="p-3 bg-white rounded-lg border border-gray-100 shadow-sm flex justify-between items-center group">
-                                            <div className="flex flex-col">
-                                                <span className="font-bold text-gray-700">{s.site_name}</span>
-                                                <span className="text-[10px] text-gray-400">Started: {s.start_date}</span>
+
+                            {/* Active Registry */}
+                            <div className="lg:col-span-1 space-y-4 max-h-[650px] overflow-y-auto pr-2 custom-scrollbar">
+                                <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2 mb-4">Project Registry</h4>
+                                {sites.slice().reverse().map(s => (
+                                    <div key={s.id} className="p-6 bg-white rounded-3xl border border-gray-50 hover:border-blue-100 shadow-sm hover:shadow-lg transition-all group">
+                                        <div className="flex justify-between items-start">
+                                            <div className="flex-1">
+                                                <h4 className="font-extrabold text-gray-800 text-sm group-hover:text-blue-600 transition-colors uppercase mb-1">{s.site_name}</h4>
+                                                <p className="text-xs text-gray-500 font-medium leading-relaxed">📍 {s.location}</p>
                                             </div>
-                                            <button onClick={() => deleteItem('sites', s.id, setSites)} className="opacity-0 group-hover:opacity-100 p-1 text-red-500 hover:bg-red-50 rounded transition-all">
-                                                🗑️
-                                            </button>
-                                        </li>
-                                    ))}
-                                    {sites.length === 0 && <p className="text-gray-400 text-sm italic text-center">No sites established yet.</p>}
-                                </ul>
+                                            <button onClick={() => deleteItem('sites', s.id, setSites)} className="opacity-0 group-hover:opacity-100 p-2 text-gray-200 hover:text-red-500 transition-all">✕</button>
+                                        </div>
+                                        <div className="mt-5 pt-4 border-t border-gray-50 flex justify-between items-center">
+                                            <div className="flex flex-col">
+                                                <span className="text-[8px] font-black text-gray-300 uppercase">Assigned To</span>
+                                                <span className="text-xs font-bold text-gray-600">{owners.find(o => o.id === s.owner)?.name || 'N/A'}</span>
+                                            </div>
+                                            <span className="text-[8px] font-black text-green-500 bg-green-50 px-2 py-0.5 rounded-full">LIVE</span>
+                                        </div>
+                                    </div>
+                                ))}
+                                {sites.length === 0 && (
+                                    <div className="py-20 text-center bg-gray-50/50 rounded-3xl border-2 border-dashed border-gray-200">
+                                        <p className="text-[10px] font-black text-gray-400 uppercase italic">No Active Projects</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -798,50 +942,141 @@ const ManpowerSection: React.FC = () => {
                                 </form>
                             </div>
 
-                            <div className="bg-blue-50/50 p-6 rounded-xl border border-blue-100 shadow-sm mt-8">
-                                <h4 className="font-bold text-gray-500 mb-4 uppercase text-xs tracking-wider">Worker Weekly Salary Summary</h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-2xl shadow-blue-900/5 mt-10">
+                                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 border-b border-gray-50 pb-6">
                                     <div>
-                                        <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Select Worker</label>
-                                        <select onChange={(e) => setWorkerSearchId(Number(e.target.value))} className="w-full border-gray-200 rounded-lg px-3 py-2 text-sm bg-white">
-                                            <option value="">-- All Workers --</option>
+                                        <h4 className="text-sm font-black text-gray-800 uppercase tracking-widest ">Weekly Payroll Summary</h4>
+                                        <p className="text-[10px] font-black text-gray-400 uppercase mt-1">Calculated Net Payable for 7-Day Range</p>
+                                    </div>
+                                    <div className="flex items-center gap-3 bg-gray-50 p-2 rounded-2xl border border-gray-100">
+                                        <span className="text-[10px] font-black text-gray-400 uppercase ml-2">Week Starting:</span>
+                                        <input
+                                            type="date"
+                                            value={summaryStartDate}
+                                            onChange={(e) => setSummaryStartDate(e.target.value)}
+                                            className="text-xs font-bold text-blue-600 bg-white border-none rounded-xl px-3 py-1.5 focus:ring-2 focus:ring-blue-100 shadow-sm"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                                    <div className="space-y-2">
+                                        <label className="block text-[10px] font-black text-gray-500 uppercase tracking-tighter ml-1">Select Personnel</label>
+                                        <select
+                                            value={workerSearchId || ''}
+                                            onChange={(e) => setWorkerSearchId(e.target.value ? Number(e.target.value) : null)}
+                                            className="w-full border-gray-100 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100 rounded-2xl px-5 py-3.5 text-sm font-medium transition-all appearance-none cursor-pointer"
+                                        >
+                                            <option value="">-- Choose Worker --</option>
                                             {workers.map(w => <option key={w.id} value={w.id}>{w.name}</option>)}
                                         </select>
                                     </div>
-                                    <div>
-                                        <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Select Site</label>
-                                        <select onChange={(e) => setWorkerSearchSiteId(Number(e.target.value))} className="w-full border-gray-200 rounded-lg px-3 py-2 text-sm bg-white">
-                                            <option value="">-- All Sites --</option>
+                                    <div className="space-y-2">
+                                        <label className="block text-[10px] font-black text-gray-500 uppercase tracking-tighter ml-1">Assigned Work Site</label>
+                                        <select
+                                            value={workerSearchSiteId || ''}
+                                            onChange={(e) => setWorkerSearchSiteId(e.target.value ? Number(e.target.value) : null)}
+                                            className="w-full border-gray-100 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100 rounded-2xl px-5 py-3.5 text-sm font-medium transition-all appearance-none cursor-pointer"
+                                        >
+                                            <option value="">-- Choose Site --</option>
                                             {sites.map(s => <option key={s.id} value={s.id}>{s.site_name}</option>)}
                                         </select>
                                     </div>
                                 </div>
 
                                 {workerSummary ? (
-                                    <div className="bg-white p-4 rounded-xl border border-blue-100 animate-in fade-in zoom-in duration-300">
-                                        <div className="flex justify-between items-start mb-4">
-                                            <div>
-                                                <h5 className="font-black text-gray-800 text-lg">{workerSummary.worker.name}</h5>
-                                                <p className="text-xs text-gray-400 italic">Site: {workerSummary.site.site_name}</p>
+                                    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                        {/* Main Stats Card */}
+                                        <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-8 rounded-[2rem] text-white shadow-xl shadow-blue-500/20 relative overflow-hidden group">
+                                            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl group-hover:bg-white/10 transition-colors"></div>
+                                            <div className="relative z-10">
+                                                <div className="flex justify-between items-start mb-8">
+                                                    <div>
+                                                        <h5 className="font-black text-2xl uppercase tracking-tight">{workerSummary.worker.name}</h5>
+                                                        <div className="flex items-center gap-2 mt-2">
+                                                            <span className="px-2 py-0.5 bg-white/20 rounded-lg text-[9px] font-black uppercase tracking-widest">{workerSummary.site.site_name}</span>
+                                                            <span className="text-[9px] font-medium text-blue-100">📅 {workerSummary.start.toLocaleDateString()} - {workerSummary.end.toLocaleDateString()}</span>
+                                                        </div>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => {
+                                                            const data = workerSummary.workerAttendances.map(a => [a.date, a.hours || 0, (a.duty || (a.hours ? a.hours / 8 : 0)).toFixed(2), `₹${(workerSummary.worker.daily_wage * (a.duty || (a.hours ? a.hours / 8 : 0))).toFixed(0)}`]);
+                                                            generatePDF(`Payroll Statement: ${workerSummary.worker.name}`, ["Date", "Hrs", "Duty", "Earned"], data, "payroll_report.pdf", workerSummary.site.site_name);
+                                                        }}
+                                                        className="bg-white text-blue-600 p-3 rounded-2xl shadow-lg hover:scale-110 active:scale-90 transition-all group/btn"
+                                                    >
+                                                        <span className="text-lg group-hover/btn:rotate-12 block">📄</span>
+                                                    </button>
+                                                </div>
+
+                                                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                                                    <div className="bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10">
+                                                        <p className="text-[9px] font-black text-blue-100 uppercase tracking-widest mb-1">Total Duty</p>
+                                                        <p className="text-xl font-black">{workerSummary.totalDuty.toFixed(2)} <span className="text-[10px] font-medium opacity-60">Days</span></p>
+                                                    </div>
+                                                    <div className="bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10">
+                                                        <p className="text-[9px] font-black text-blue-100 uppercase tracking-widest mb-1">Gross Salary</p>
+                                                        <p className="text-xl font-black">₹{workerSummary.grossSalary.toFixed(0)}</p>
+                                                    </div>
+                                                    <div className="bg-red-500/20 p-4 rounded-2xl backdrop-blur-md border border-red-400/20">
+                                                        <p className="text-[9px] font-black text-red-100 uppercase tracking-widest mb-1">Advances</p>
+                                                        <p className="text-xl font-black text-red-100">-₹{workerSummary.totalAdvances.toFixed(0)}</p>
+                                                    </div>
+                                                    <div className="bg-white p-5 rounded-2xl shadow-inner md:col-span-1 border border-white/20">
+                                                        <p className="text-[9px] font-black text-blue-600 uppercase tracking-widest mb-1">Net Payable</p>
+                                                        <p className="text-2xl font-black text-gray-900">₹{workerSummary.netSalary.toFixed(0)}</p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <button
-                                                onClick={() => {
-                                                    const data = workerSummary.workerAttendances.map(a => [a.date, a.hours || 0, (a.duty || (a.hours ? a.hours / 8 : 0)).toFixed(2)]);
-                                                    generatePDF(`Attendance Report: ${workerSummary.worker.name}`, ["Date", "Hours", "Duty"], data, "attendance.pdf");
-                                                }}
-                                                className="bg-blue-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-blue-700 shadow-md flex items-center gap-2"
-                                            >
-                                                🖨️ Print PDF
-                                            </button>
                                         </div>
-                                        <div className="grid grid-cols-3 gap-2 py-3 border-t border-gray-50">
-                                            <div className="text-center"><p className="text-[8px] text-gray-400 uppercase font-bold">Total Hrs</p><p className="text-sm font-black text-gray-700">{workerSummary.totalHours}</p></div>
-                                            <div className="text-center"><p className="text-[8px] text-gray-400 uppercase font-bold">Total Duty</p><p className="text-sm font-black text-orange-600">{workerSummary.totalDuty.toFixed(2)}</p></div>
-                                            <div className="text-center"><p className="text-[8px] text-gray-400 uppercase font-bold">Total Salary</p><p className="text-sm font-black text-green-600">₹{workerSummary.salary.toFixed(2)}</p></div>
+
+                                        {/* Attendance Breakdown List */}
+                                        <div className="bg-gray-50/50 rounded-[2rem] p-6 border border-gray-100">
+                                            <h6 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4 ml-2">Verification Breakdown</h6>
+                                            <div className="space-y-3">
+                                                {workerSummary.workerAttendances.length > 0 ? workerSummary.workerAttendances.map(a => (
+                                                    <div key={a.id} className="flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-50 shadow-sm hover:shadow-md transition-all">
+                                                        <div className="flex items-center gap-4">
+                                                            <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center font-black text-[10px]">{a.date.split('-')[2]}</div>
+                                                            <div>
+                                                                <p className="text-xs font-black text-gray-800">{a.date}</p>
+                                                                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">{a.status}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <p className="text-xs font-black text-gray-800">{a.hours || 0} Hrs</p>
+                                                            <p className="text-[9px] font-bold text-orange-600 uppercase tracking-tighter">{(a.duty || (a.hours ? a.hours / 8 : 0)).toFixed(2)} Duty</p>
+                                                        </div>
+                                                    </div>
+                                                )) : (
+                                                    <div className="py-10 text-center border-2 border-dashed border-gray-200 rounded-3xl">
+                                                        <p className="text-[10px] font-black text-gray-300 uppercase italic">No Attendance Data for this Week</p>
+                                                    </div>
+                                                )}
+                                                
+                                                {workerSummary.workerAdvances.length > 0 && (
+                                                    <div className="mt-6 pt-6 border-t border-gray-100">
+                                                        <h6 className="text-[10px] font-black text-red-400 uppercase tracking-widest mb-4 ml-2">Advance Records</h6>
+                                                        {workerSummary.workerAdvances.map(adv => (
+                                                            <div key={adv.id} className="flex items-center justify-between p-3 bg-red-50/30 rounded-xl border border-red-100/50 mb-2">
+                                                                <div className="flex items-center gap-3">
+                                                                    <span className="text-xs">💸</span>
+                                                                    <p className="text-[10px] font-bold text-gray-600">{adv.given_date}: {adv.note || 'Cash Advance'}</p>
+                                                                </div>
+                                                                <p className="text-xs font-black text-red-600">₹{adv.amount}</p>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 ) : (
-                                    <p className="text-center text-gray-400 text-xs italic py-10">Select both worker and site to see calculation</p>
+                                    <div className="py-24 text-center bg-gray-50/50 rounded-[2rem] border-2 border-dashed border-gray-100">
+                                        <div className="w-16 h-16 bg-blue-50 text-blue-200 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">📋</div>
+                                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Select worker and site to preview payroll</p>
+                                        <p className="text-[9px] text-gray-300 font-bold mt-1 uppercase tracking-tighter italic">Weekly calculation resets automatically based on selected date</p>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -923,24 +1158,35 @@ const ManpowerSection: React.FC = () => {
                             <div className="bg-gray-50/50 p-6 rounded-xl border border-gray-100">
                                 <div className="flex justify-between items-center mb-6">
                                     <h4 className="font-bold text-gray-500 uppercase text-xs tracking-wider">Site-wise Work Logs</h4>
-                                    <div className="flex gap-2">
+                                    <div className="flex gap-3">
                                         <button
                                             onClick={() => {
                                                 const data = workEntries.map(e => [e.work_date, sites.find(s => s.id === e.site)?.site_name || '', workers.find(w => w.id === e.worker)?.name || '', e.hours || '—']);
                                                 generatePDF("Work Logs (Owner Copy)", ["Date", "Site", "Worker", "Hrs"], data, "owner_logs.pdf");
                                             }}
-                                            className="text-[10px] bg-white border border-gray-200 px-3 py-1 rounded-lg font-bold hover:bg-gray-100"
+                                            className="text-[10px] bg-white border border-gray-200 px-4 py-2 rounded-xl font-bold hover:bg-gray-50 hover:shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2"
                                         >
-                                            👤 Owner PDF
+                                            <span className="text-xs">👤</span> Owner PDF
                                         </button>
                                         <button
                                             onClick={() => {
-                                                const data = workEntries.map(e => [e.work_date, sites.find(s => s.id === e.site)?.site_name || '', workers.find(w => w.id === e.worker)?.name || '', e.hours || '—', `₹${e.owner_paid_amount}`, `₹${e.worker_paid_amount}`]);
+                                                const entries = workEntries;
+                                                const totalOwner = entries.reduce((s, e) => s + (e.owner_paid_amount || 0), 0);
+                                                const totalWorker = entries.reduce((s, e) => s + (e.worker_paid_amount || 0), 0);
+
+                                                const data = [
+                                                    ...entries.map(e => [e.work_date, sites.find(s => s.id === e.site)?.site_name || '', workers.find(w => w.id === e.worker)?.name || '', e.hours || '—', `₹${e.owner_paid_amount}`, `₹${e.worker_paid_amount}`]),
+                                                    [{
+                                                        content: `SUMMARY >>  Total Billed: ₹${totalOwner}  |  Total Paid: ₹${totalWorker}  |  Site Margin: ₹${totalOwner - totalWorker}`,
+                                                        colSpan: 6,
+                                                        styles: { halign: 'center', fillColor: [31, 41, 55], textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 10 }
+                                                    }]
+                                                ];
                                                 generatePDF("Work Logs (Admin Copy)", ["Date", "Site", "Worker", "Hrs", "Owner Billed", "Worker Paid"], data, "admin_logs.pdf");
                                             }}
-                                            className="text-[10px] bg-gray-800 text-white px-3 py-1 rounded-lg font-bold hover:bg-black"
+                                            className="text-[10px] bg-gradient-to-r from-gray-800 to-gray-900 text-white px-4 py-2 rounded-xl font-bold hover:shadow-lg hover:shadow-gray-900/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2"
                                         >
-                                            ⚙️ Admin PDF
+                                            <span className="text-xs">⚙️</span> Admin PDF
                                         </button>
                                     </div>
                                 </div>
@@ -1117,15 +1363,15 @@ const ManpowerSection: React.FC = () => {
                                             onClick={() => {
                                                 const site = sites.find(s => s.id === Number(formData.site));
                                                 const data = [
-                                                    ["Total Income", `₹${siteFinancials.income}`],
-                                                    ["Total Outflow", `₹${siteFinancials.outflow}`],
-                                                    ["Estimated Profit", `₹${siteFinancials.profit}`]
+                                                    ["Total Income (Owner Payments)", `₹${siteFinancials.income}`],
+                                                    ["Total Outflow (Wages + Expenses)", `₹${siteFinancials.outflow}`],
+                                                    ["Estimated Profit / Balance", `₹${siteFinancials.profit}`]
                                                 ];
-                                                generatePDF(`Financial Summary: ${site?.site_name}`, ["Category", "Amount"], data, "financial_summary.pdf");
+                                                generatePDF(`Financial Summary: ${site?.site_name}`, ["Account Description", "Amount"], data, "financial_summary.pdf", site?.site_name);
                                             }}
-                                            className="text-[10px] bg-white border border-gray-300 px-3 py-1 rounded-lg font-bold hover:bg-gray-50"
+                                            className="text-[10px] bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-4 py-2 rounded-xl font-bold hover:shadow-lg hover:shadow-emerald-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2"
                                         >
-                                            🖨️ Print Report
+                                            <span className="text-xs">🖨️</span> Print Report
                                         </button>
                                     )}
                                 </div>
@@ -1220,12 +1466,22 @@ const ManpowerSection: React.FC = () => {
                             </h3>
                             <button
                                 onClick={() => {
-                                    const data = filteredTransactions.map(t => [t.date, t.siteId ? (sites.find(s => s.id === t.siteId)?.site_name || 'Manual') : 'Worker', t.displayType, t.note || '—', `${t.type === 'Income' ? '+' : '-'}₹${t.amount}`]);
+                                    const totalIn = filteredTransactions.filter(t => t.type === 'Income').reduce((s, t) => s + t.amount, 0);
+                                    const totalOut = filteredTransactions.filter(t => t.type !== 'Income').reduce((s, t) => s + t.amount, 0);
+
+                                    const data = [
+                                        ...filteredTransactions.map(t => [t.date, t.siteId ? (sites.find(s => s.id === t.siteId)?.site_name || 'Manual') : 'Worker', t.displayType, t.note || '—', `${t.type === 'Income' ? '+' : '-'}₹${t.amount}`]),
+                                        [{
+                                            content: `LEDGER SUMMARY >>  Total IN: ₹${totalIn}  |  Total OUT: ₹${totalOut}  |  NET BALANCE: ₹${totalIn - totalOut}`,
+                                            colSpan: 5,
+                                            styles: { halign: 'center', fillColor: [31, 41, 55], textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 10 }
+                                        }]
+                                    ];
                                     generatePDF(`Ledger Report (${transactionStartDate} to +6 days)`, ["Date", "Site/Worker", "Type", "Note", "Amount"], data, "ledger.pdf");
                                 }}
-                                className="bg-gray-800 text-white px-6 py-2 rounded-xl font-bold hover:bg-black shadow-lg flex items-center gap-2"
+                                className="bg-gradient-to-r from-violet-600 to-purple-600 text-white px-8 py-3 rounded-xl font-bold hover:shadow-xl hover:shadow-purple-500/30 hover:scale-[1.05] active:scale-[0.95] transition-all flex items-center gap-2 border border-white/10"
                             >
-                                🖨️ Print Ledger
+                                <span className="text-lg">🖨️</span> Print Ledger
                             </button>
                         </div>
 
