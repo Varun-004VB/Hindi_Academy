@@ -576,8 +576,7 @@ const ManpowerSection: React.FC = () => {
             headStyles: {
                 fillColor: [37, 99, 235],
                 fontSize: 10,
-                cellPadding: 4,
-                halign: 'inherit'
+                cellPadding: 4
             },
             bodyStyles: {
                 fontSize: 9,
@@ -618,7 +617,7 @@ const ManpowerSection: React.FC = () => {
 
         doc.setFontSize(7);
         doc.text("This is a computer-generated report and remains the property of Hindi Academy Construction Division.", 15, pageHeight - 10);
-        doc.text(`Page ${doc.internal.getNumberOfPages()}`, 190, pageHeight - 10);
+        doc.text(`Page ${doc.getNumberOfPages()}`, 190, pageHeight - 10);
 
         window.open(doc.output('bloburl'), '_blank');
     };
