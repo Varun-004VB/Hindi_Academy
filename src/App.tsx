@@ -14,7 +14,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import Auth from './components/Auth';
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
-import ConstructionService from "./pages/ConstructionService";
+
 
 
 // Modal component that can use useNavigate
@@ -170,7 +170,7 @@ function App() {
                 <Route path="/blog" element={<BlogPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/auth" element={<Auth />} />
-                <Route path="/contractor" element={<ConstructionService />} />
+
               </Routes>
               <WhatsAppButton />
               <HindiLearningChat />

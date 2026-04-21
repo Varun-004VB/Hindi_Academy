@@ -1,0 +1,84 @@
+﻿{
+    "name":  "Worker List",
+    "description":  "",
+    "renders":  [
+                    "application/json",
+                    "text/html"
+                ],
+    "parses":  [
+                   "application/json",
+                   "application/x-www-form-urlencoded",
+                   "multipart/form-data"
+               ],
+    "actions":  {
+                    "POST":  {
+                                 "id":  {
+                                            "type":  "string",
+                                            "required":  false,
+                                            "read_only":  true,
+                                            "label":  "Id"
+                                        },
+                                 "site_name":  {
+                                                   "type":  "string",
+                                                   "required":  false,
+                                                   "read_only":  true,
+                                                   "label":  "Site name"
+                                               },
+                                 "category_name":  {
+                                                       "type":  "string",
+                                                       "required":  false,
+                                                       "read_only":  true,
+                                                       "label":  "Category name"
+                                                   },
+                                 "created_at":  {
+                                                    "type":  "datetime",
+                                                    "required":  false,
+                                                    "read_only":  true,
+                                                    "label":  "Created at"
+                                                },
+                                 "name":  {
+                                              "type":  "string",
+                                              "required":  true,
+                                              "read_only":  false,
+                                              "label":  "Name",
+                                              "max_length":  150
+                                          },
+                                 "selected_wage":  {
+                                                       "type":  "float",
+                                                       "required":  true,
+                                                       "read_only":  false,
+                                                       "label":  "Selected wage"
+                                                   },
+                                 "wage_per_duty":  {
+                                                       "type":  "float",
+                                                       "required":  false,
+                                                       "read_only":  false,
+                                                       "label":  "Wage per duty"
+                                                   },
+                                 "payout_rate":  {
+                                                     "type":  "float",
+                                                     "required":  false,
+                                                     "read_only":  false,
+                                                     "label":  "Payout rate"
+                                                 },
+                                 "is_active":  {
+                                                   "type":  "boolean",
+                                                   "required":  false,
+                                                   "read_only":  false,
+                                                   "label":  "Is active"
+                                               },
+                                 "site":  {
+                                              "type":  "field",
+                                              "required":  true,
+                                              "read_only":  false,
+                                              "label":  "Site"
+                                          },
+                                 "category":  {
+                                                  "type":  "field",
+                                                  "required":  false,
+                                                  "read_only":  false,
+                                                  "label":  "Category"
+                                              }
+                             }
+                }
+}

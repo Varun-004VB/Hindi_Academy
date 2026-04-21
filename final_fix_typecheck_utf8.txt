@@ -1,0 +1,54 @@
+﻿
+> vite-react-typescript-starter@0.0.0 typecheck
+> tsc --noEmit -p tsconfig.app.json
+
+src/components/admin/BalanceSheetTab.tsx(109,52): error TS7006: Parameter 't' implicitly has an 'any' type.
+src/components/admin/BalanceSheetTab.tsx(119,53): error TS7006: Parameter 't' implicitly has an 'any' type.
+src/components/admin/BalanceSheetTab.tsx(129,53): error TS7006: Parameter 't' implicitly has an 'any' type.
+src/components/admin/BalanceSheetTab.tsx(139,53): error TS7006: Parameter 't' implicitly has an 'any' type.
+src/components/admin/BalanceSheetTab.tsx(149,61): error TS7006: Parameter 't' implicitly has an 'any' type.
+src/components/admin/BalanceSheetTab.tsx(164,31): error TS2339: Property 'siteId' does not exist on type 'Transaction'.
+src/components/admin/BalanceSheetTab.tsx(170,21): error TS2339: Property 'paidAmount' does not exist on type 'Transaction'.
+src/components/admin/BalanceSheetTab.tsx(177,31): error TS2339: Property 'siteId' does not exist on type 'Transaction'.
+src/components/admin/BalanceSheetTab.tsx(182,56): error TS2339: Property 'workerId' does not exist on type 'Transaction'.
+src/components/admin/BalanceSheetTab.tsx(184,17): error TS2339: Property 'paidAmount' does not exist on type 'Transaction'.
+src/components/admin/TransactionTab.tsx(101,43): error TS2339: Property 'siteId' does not exist on type 'Transaction'.
+src/components/admin/TransactionTab.tsx(102,35): error TS2339: Property 'paidAmount' does not exist on type 'Transaction'.
+src/components/admin/TransactionTab.tsx(191,7): error TS2353: Object literal may only specify known properties, and 'siteId' does not exist in type 'Partial<Transaction>'.
+src/components/admin/TransactionTab.tsx(223,33): error TS2339: Property 'siteId' does not exist on type 'Transaction'.
+src/components/admin/TransactionTab.tsx(232,12): error TS2339: Property 'remarks' does not exist on type '{ branchName: string; receivedFrom: string; id: string; remoteId?: number | undefined; type: "Received" | "Paid"; date: string; personName?: string | undefined; engineerId?: string | undefined; fullAmount?: number | undefined; }'.
+src/components/admin/TransactionTab.tsx(232,25): error TS2339: Property 'remarks' does not exist on type '{ branchName: string; receivedFrom: string; id: string; remoteId?: number | undefined; type: "Received" | "Paid"; date: string; personName?: string | undefined; engineerId?: string | undefined; fullAmount?: number | undefined; }'.
+src/components/admin/TransactionTab.tsx(236,33): error TS2339: Property 'siteId' does not exist on type '{ branchName: string; receivedFrom: string; id: string; remoteId?: number | undefined; type: "Received" | "Paid"; date: string; personName?: string | undefined; engineerId?: string | undefined; fullAmount?: number | undefined; }'.
+src/components/admin/TransactionTab.tsx(253,66): error TS2339: Property 'paidAmount' does not exist on type '{ branchName: string; receivedFrom: string; id: string; remoteId?: number | undefined; type: "Received" | "Paid"; date: string; personName?: string | undefined; engineerId?: string | undefined; fullAmount?: number | undefined; }'.
+src/components/admin/TransactionTab.tsx(268,33): error TS2339: Property 'siteId' does not exist on type 'Transaction'.
+src/components/admin/TransactionTab.tsx(269,21): error TS2339: Property 'workerId' does not exist on type 'Transaction'.
+src/components/admin/TransactionTab.tsx(269,48): error TS2339: Property 'workerId' does not exist on type 'Transaction'.
+src/components/admin/TransactionTab.tsx(270,25): error TS2339: Property 'workerId' does not exist on type 'Transaction'.
+src/components/admin/TransactionTab.tsx(270,43): error TS2339: Property 'workerId' does not exist on type 'Transaction'.
+src/components/admin/TransactionTab.tsx(279,12): error TS2339: Property 'remarks' does not exist on type '{ branchName: string; workerName: string; workerSystemId: string; id: string; remoteId?: number | undefined; type: "Received" | "Paid"; date: string; personName?: string | undefined; engineerId?: string | undefined; fullAmount?: number | undefined; }'.
+src/components/admin/TransactionTab.tsx(279,25): error TS2339: Property 'remarks' does not exist on type '{ branchName: string; workerName: string; workerSystemId: string; id: string; remoteId?: number | undefined; type: "Received" | "Paid"; date: string; personName?: string | undefined; engineerId?: string | undefined; fullAmount?: number | undefined; }'.
+src/components/admin/TransactionTab.tsx(283,33): error TS2339: Property 'siteId' does not exist on type '{ branchName: string; workerName: string; workerSystemId: string; id: string; remoteId?: number | undefined; type: "Received" | "Paid"; date: string; personName?: string | undefined; engineerId?: string | undefined; fullAmount?: number | undefined; }'.
+src/components/admin/TransactionTab.tsx(300,62): error TS2339: Property 'paidAmount' does not exist on type '{ branchName: string; workerName: string; workerSystemId: string; id: string; remoteId?: number | undefined; type: "Received" | "Paid"; date: string; personName?: string | undefined; engineerId?: string | undefined; fullAmount?: number | undefined; }'.
+src/components/admin/TransactionTab.tsx(525,124): error TS2339: Property 'paidAmount' does not exist on type '{ branchName: string; receivedFrom: string; id: string; remoteId?: number | undefined; type: "Received" | "Paid"; date: string; personName?: string | undefined; engineerId?: string | undefined; fullAmount?: number | undefined; }'.
+src/components/admin/TransactionTab.tsx(526,118): error TS2339: Property 'balanceAmount' does not exist on type '{ branchName: string; receivedFrom: string; id: string; remoteId?: number | undefined; type: "Received" | "Paid"; date: string; personName?: string | undefined; engineerId?: string | undefined; fullAmount?: number | undefined; }'.
+src/components/admin/TransactionTab.tsx(527,118): error TS2339: Property 'remarks' does not exist on type '{ branchName: string; receivedFrom: string; id: string; remoteId?: number | undefined; type: "Received" | "Paid"; date: string; personName?: string | undefined; engineerId?: string | undefined; fullAmount?: number | undefined; }'.
+src/components/admin/TransactionTab.tsx(606,118): error TS2339: Property 'paidAmount' does not exist on type '{ branchName: string; workerName: string; workerSystemId: string; id: string; remoteId?: number | undefined; type: "Received" | "Paid"; date: string; personName?: string | undefined; engineerId?: string | undefined; fullAmount?: number | undefined; }'.
+src/components/admin/TransactionTab.tsx(607,118): error TS2339: Property 'remarks' does not exist on type '{ branchName: string; workerName: string; workerSystemId: string; id: string; remoteId?: number | undefined; type: "Received" | "Paid"; date: string; personName?: string | undefined; engineerId?: string | undefined; fullAmount?: number | undefined; }'.
+src/components/admin/WorkerDatabaseTab.tsx(4,27): error TS2305: Module '"../../hooks/useEngineerData"' has no exported member 'WorkerProfile'.
+src/hooks/useEngineerData.ts(81,60): error TS2304: Cannot find name 'WorkerCategory'.
+src/hooks/useEngineerData.ts(82,54): error TS2304: Cannot find name 'BalanceSheet'.
+src/hooks/useEngineerData.ts(83,56): error TS2304: Cannot find name 'WorkerProfile'.
+src/hooks/useEngineerData.ts(321,48): error TS2304: Cannot find name 'BalanceSheet'.
+src/hooks/useEngineerData.ts(332,63): error TS2304: Cannot find name 'BalanceSheet'.
+src/hooks/useEngineerData.ts(333,80): error TS2304: Cannot find name 'BalanceSheet'.
+src/hooks/useEngineerData.ts(353,55): error TS2304: Cannot find name 'WorkerProfile'.
+src/hooks/useEngineerData.ts(366,70): error TS2304: Cannot find name 'WorkerProfile'.
+src/hooks/useEngineerData.ts(388,45): error TS2304: Cannot find name 'WorkerProfile'.
+src/lib/api.ts(3,3): error TS6133: 'BalanceSheet' is declared but its value is never read.
+src/lib/api.ts(3,17): error TS6133: 'WorkerProfile' is declared but its value is never read.
+src/lib/api.ts(3,32): error TS6133: 'WorkerCategory' is declared but its value is never read.
+src/lib/api.ts(641,14): error TS2339: Property 'engineerId' does not exist on type 'Partial<Expense>'.
+src/lib/api.ts(643,53): error TS2339: Property 'engineerId' does not exist on type 'Partial<Expense>'.
+src/lib/api.ts(685,14): error TS2339: Property 'engineerId' does not exist on type 'Partial<Expense>'.
+src/lib/api.ts(687,53): error TS2339: Property 'engineerId' does not exist on type 'Partial<Expense>'.
+src/lib/workerProfilePdf.ts(3,10): error TS2305: Module '"../hooks/useEngineerData"' has no exported member 'WorkerProfile'.

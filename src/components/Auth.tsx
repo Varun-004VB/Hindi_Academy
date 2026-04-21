@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || "https://motor-vending-paramount.ngrok-free.dev").replace(/\/+$/, "");
 
 // --------------------------------------------------
 // Permanent Device ID Function (Keep This)
@@ -12,6 +13,8 @@ const getDeviceId = (): string => {
   }
   return id;
 };
+
+import { supabase } from "../lib/supabase";
 
 const Auth: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -27,6 +30,24 @@ const Auth: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // --------------------------------------------------
+  // GOOGLE LOGIN
+  // --------------------------------------------------
+  const handleGoogleLogin = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+      if (error) throw error;
+    } catch (error) {
+      console.error("Google Login error:", error);
+      alert("Google Login failed.");
+    }
   };
 
   // --------------------------------------------------
@@ -47,9 +68,12 @@ const Auth: React.FC = () => {
     };
 
     try {
-      const response = await fetch("https://api.codingboss.in/manpower/signup/", {
+      const response = await fetch(`${API_BASE}/manpower/signup/`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true"
+        },
         body: JSON.stringify(payload),
       });
 
@@ -96,9 +120,12 @@ const Auth: React.FC = () => {
     };
 
     try {
-      const response = await fetch("https://api.codingboss.in/manpower/login/", {
+      const response = await fetch(`${API_BASE}/manpower/owners/login/`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true"
+        },
         body: JSON.stringify(payload),
       });
 
@@ -198,6 +225,23 @@ const Auth: React.FC = () => {
               className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-full font-semibold shadow-md shadow-purple-500/30"
             >
               {isLogin ? "Sign In" : "Sign Up"}
+            </button>
+
+            <div className="relative my-2">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-gray-300"></span>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              </div>
+            </div>
+
+            <button
+              onClick={handleGoogleLogin}
+              className="flex items-center justify-center gap-3 bg-white border border-gray-300 text-gray-700 py-3 rounded-full font-semibold hover:bg-gray-50 transition-colors shadow-sm"
+            >
+              <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
+              Sign in with Google
             </button>
 
             <button

@@ -1,0 +1,15 @@
+﻿
+> vite-react-typescript-starter@0.0.0 typecheck
+> tsc --noEmit -p tsconfig.app.json
+
+src/components/admin/BalanceSheetTab.tsx(18,32): error TS6133: 'duties' is declared but its value is never read.
+src/components/admin/PayOutTab.tsx(4,1): error TS6133: 'apiService' is declared but its value is never read.
+src/components/admin/PayOutTab.tsx(6,71): error TS6133: 'Edit2' is declared but its value is never read.
+src/components/admin/PayOutTab.tsx(33,56): error TS2339: Property 'payouts' does not exist on type '{ engineers: Engineer[]; addEngineer: (data: Partial<Engineer>) => Promise<Engineer>; deleteEngineer: (id: string) => Promise<void>; ... 40 more ...; refreshData: () => Promise<...>; }'.
+src/components/admin/PayOutTab.tsx(33,65): error TS2339: Property 'addPayout' does not exist on type '{ engineers: Engineer[]; addEngineer: (data: Partial<Engineer>) => Promise<Engineer>; deleteEngineer: (id: string) => Promise<void>; ... 40 more ...; refreshData: () => Promise<...>; }'.
+src/components/admin/PayOutTab.tsx(33,76): error TS2339: Property 'deletePayout' does not exist on type '{ engineers: Engineer[]; addEngineer: (data: Partial<Engineer>) => Promise<Engineer>; deleteEngineer: (id: string) => Promise<void>; ... 40 more ...; refreshData: () => Promise<...>; }'.
+src/components/admin/PayOutTab.tsx(33,90): error TS2339: Property 'updatePayout' does not exist on type '{ engineers: Engineer[]; addEngineer: (data: Partial<Engineer>) => Promise<Engineer>; deleteEngineer: (id: string) => Promise<void>; ... 40 more ...; refreshData: () => Promise<...>; }'.
+src/components/admin/PayOutTab.tsx(226,9): error TS6133: 'handleEditPayout' is declared but its value is never read.
+src/components/admin/PayOutTab.tsx(231,9): error TS6133: 'handleUpdatePayout' is declared but its value is never read.
+src/components/admin/PayOutTab.tsx(508,47): error TS7006: Parameter 'p' implicitly has an 'any' type.
+src/components/admin/TransactionTab.tsx(46,30): error TS6133: 'setLoadingSiteBalance' is declared but its value is never read.

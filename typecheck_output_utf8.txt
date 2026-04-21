@@ -1,0 +1,14 @@
+﻿
+> vite-react-typescript-starter@0.0.0 typecheck
+> tsc --noEmit -p tsconfig.app.json
+
+src/components/admin/AdvanceTab.tsx(2,27): error TS6133: 'Advance' is declared but its value is never read.
+src/components/admin/BalanceSheetTab.tsx(20,35): error TS2339: Property 'setCashInHand' does not exist on type '{ engineers: Engineer[]; addEngineer: (data: Partial<Engineer>) => Promise<Engineer>; deleteEngineer: (id: string) => Promise<void>; ... 27 more ...; refreshData: () => Promise<...>; }'.
+src/components/admin/BalanceSheetTab.tsx(21,35): error TS2339: Property 'setCashInBank' does not exist on type '{ engineers: Engineer[]; addEngineer: (data: Partial<Engineer>) => Promise<Engineer>; deleteEngineer: (id: string) => Promise<void>; ... 27 more ...; refreshData: () => Promise<...>; }'.
+src/components/admin/PayOutTab.tsx(6,70): error TS6133: 'transactions' is declared but its value is never read.
+src/components/admin/TransactionTab.tsx(5,52): error TS2339: Property 'setTransactions' does not exist on type '{ engineers: Engineer[]; addEngineer: (data: Partial<Engineer>) => Promise<Engineer>; deleteEngineer: (id: string) => Promise<void>; ... 27 more ...; refreshData: () => Promise<...>; }'.
+src/components/admin/TransactionTab.tsx(274,71): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/components/FloatingLines.tsx(12,8): error TS7016: Could not find a declaration file for module 'three'. 'C:/Users/kumar/OneDrive/Documents/final (2)/final/HindiAcademy-main/node_modules/three/build/three.module.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/three` if it exists or add a new declaration (.d.ts) file containing `declare module 'three';`
+src/components/Testimonials.tsx(38,75): error TS6133: 'event' is declared but its value is never read.

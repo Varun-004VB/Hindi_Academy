@@ -1,0 +1,45 @@
+﻿{
+    "name":  "Worker Category List",
+    "description":  "",
+    "renders":  [
+                    "application/json",
+                    "text/html"
+                ],
+    "parses":  [
+                   "application/json",
+                   "application/x-www-form-urlencoded",
+                   "multipart/form-data"
+               ],
+    "actions":  {
+                    "POST":  {
+                                 "id":  {
+                                            "type":  "string",
+                                            "required":  false,
+                                            "read_only":  true,
+                                            "label":  "Id"
+                                        },
+                                 "created_at":  {
+                                                    "type":  "datetime",
+                                                    "required":  false,
+                                                    "read_only":  true,
+                                                    "label":  "Created at"
+                                                },
+                                 "name":  {
+                                              "type":  "choice",
+                                              "required":  true,
+                                              "read_only":  false,
+                                              "label":  "Name",
+                                              "choices":  [
+                                                              {
+                                                                  "value":  "helper",
+                                                                  "display_name":  "Helper"
+                                                              },
+                                                              {
+                                                                  "value":  "mason",
+                                                                  "display_name":  "Mason"
+                                                              }
+                                                          ]
+                                          }
+                             }
+                }
+}

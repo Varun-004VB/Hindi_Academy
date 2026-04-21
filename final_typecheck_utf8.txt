@@ -1,0 +1,10 @@
+﻿
+> vite-react-typescript-starter@0.0.0 typecheck
+> tsc --noEmit -p tsconfig.app.json
+
+src/components/admin/PayOutTab.tsx(32,90): error TS6133: 'updatePayout' is declared but its value is never read.
+src/components/admin/PayOutTab.tsx(37,10): error TS6133: 'isEditingPayout' is declared but its value is never read.
+src/components/admin/PayOutTab.tsx(37,27): error TS6133: 'setIsEditingPayout' is declared but its value is never read.
+src/components/admin/PayOutTab.tsx(38,10): error TS6133: 'editPayoutData' is declared but its value is never read.
+src/components/admin/PayOutTab.tsx(38,26): error TS6133: 'setEditPayoutData' is declared but its value is never read.
+src/components/admin/TransactionTab.tsx(405,22): error TS2304: Cannot find name 'loadingSiteBalance'.

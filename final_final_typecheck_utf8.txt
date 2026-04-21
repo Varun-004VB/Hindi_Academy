@@ -1,0 +1,7 @@
+﻿
+> vite-react-typescript-starter@0.0.0 typecheck
+> tsc --noEmit -p tsconfig.app.json
+
+src/lib/api.ts(3,3): error TS6133: 'BalanceSheet' is declared but its value is never read.
+src/lib/api.ts(3,17): error TS6133: 'WorkerProfile' is declared but its value is never read.
+src/lib/api.ts(3,32): error TS6133: 'WorkerCategory' is declared but its value is never read.

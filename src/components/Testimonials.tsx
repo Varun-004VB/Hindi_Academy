@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Star, Quote } from 'lucide-react';
+import { Star, Quote, Send, Loader2 } from 'lucide-react';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 interface Testimonial {
+  id?: string;
   name: string;
   role: string;
   image: string;
@@ -11,200 +13,313 @@ interface Testimonial {
 
 export default function Testimonials() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [averageRating] = useState('4.6');
-  const [reviewCount] = useState('50,000+');
+  const [averageRating] = useState('4.8');
+  const [reviewCount, setReviewCount] = useState('50,000+');
 
-  const fetchedTestimonials = [
-    {
-      name: 's.m. silambarasan',
-      role: 'Spoken Hindi Learner',
-      image: '',
-      text: 'Excellent teaching methodology, making complex concepts easy to understand. Encourages active participation and provides equal opportunities to all students. Well-structured lessons and homeworks over all excellent teaching.',
-      rating: 5
-    },
-    {
-      name: 'Student B',
-      role: 'Working Professional',
-      image: 'https://thumbs.dreamstime.com/b/portrait-young-happy-indian-business-man-executive-looking-camera-portrait-young-happy-indian-business-man-executive-214230764.jpg',
-      text: 'Excellent teaching methodology, making complex concepts easy to understand.Encourages active participation and provides equal opportunities to all students.Well-structured lessons and homeworksover all excellent teaching.',
-      rating: 5
-    },
-    {
-      name: 'Student C',
-      role: 'New Language Speaker',
-      image: 'https://elements-resized.envatousercontent.com/elements-video-cover-images/9216be04-05fb-4911-b335-a5f6229cf333/video_preview/video_preview_0000.jpg?w=500&cf_fit=cover&q=85&format=auto&s=beccaa03db3a870f6eaf52fec7683b582a8ba4e783e1c381596603066c283b41',
-      text: 'I have been now completed my 4th week class. I can see a difference in my Hindi proficiency. I can say other institutes are giving training on vocabulary at the same time here you can start form sentence. The training is purely on your speaking ability I bet you can definitely manage wherever you go in India.',
-      rating: 5
-    },
-    {
-      name: 'Student D',
-      role: 'Software Developer',
-      image: 'https://t4.ftcdn.net/jpg/05/70/57/47/360_F_570574724_HWfki1q3XZt9WzVlCcQujOV5Jxe8UBG1.jpg',
-      text: 'Excellent teaching ,such a good understanding of the language, always encouraging,teaches us all the tenses in a simplified form. Thank you Sir. You have made Hindi language easy to understand and speak.Those who would love to learn spoken Hindi dont wait anymore join immediately.I guarantee.',
-      rating: 5
-    },
-    {
-      name: 'Student E',
-      role: 'Business Analyst',
-      image: 'https://thumbs.dreamstime.com/b/serious-attractive-indian-man-posing-vertical-head-shot-serious-attractive-indian-man-posing-vertical-head-shot-front-312861983.jpg',
-      text: 'I highly recommend this course. The structured lessons and practice exercises helped me master the language quickly. The certificate is a great bonus too!',
-      rating: 5
-    },
-    {
-      name: 'Student F',
-      role: 'Educator',
-      image: 'https://img.freepik.com/free-photo/cheerful-indian-businessman-smiling-closeup-portrait-jobs-career-campaign_53876-129417.jpg?semt=ais_hybrid&w=740&q=80',
-      text: 'Definitely here you will come out learning Spoken Hindi. I have attended many classes. But here it is entirely different and Mr.Surendars Framework is brilliant.',
-      rating: 5
-    }
-  ];
+  // Review form state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [newReview, setNewReview] = useState({ text: '', rating: 5 });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    setTestimonials(fetchedTestimonials);
-    setLoading(false);
+    fetchTestimonials();
 
-    const timer = setInterval(() => {
-      setTestimonials((currentList) => {
-        if (currentList.length > 0) {
-          setCurrentSlide((prev) => (prev + 1) % currentList.length);
-        }
-        return currentList;
-      });
-    }, 3000);
+    if (!isSupabaseConfigured) {
+      setLoading(false);
+      return;
+    }
 
-    return () => clearInterval(timer);
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      setIsLoggedIn(!!session);
+      setUser(session?.user ?? null);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
+
+  const checkUser = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsLoggedIn(!!session);
+      setUser(session?.user ?? null);
+    } catch (err) {
+      console.warn('Supabase session check failed:', err);
+    }
+  };
+
+  const fetchTestimonials = async () => {
+    setLoading(true);
+    // Shared static testimonials fallback
+    const staticTestimonials = [
+      {
+        name: 'Prem Jv',
+        role: 'Student',
+        image: '',
+        text: 'Excellent Spoken Hindi Centre. Since the Tutor is Ex-Army man, he taught us very practical way of speaking such as Native speaker not only that u will understand culture and high standards of Hindi also. VERY WORTHY',
+        rating: 5
+      },
+      {
+        name: 'Mohon',
+        role: 'Parent',
+        image: '',
+        text: 'Excellent teaching methodology, making complex concepts easy to understand. Encourages active participation and provides equal opportunities to all students. Best place for children to learn Hindi very soon.',
+        rating: 5
+      },
+      {
+        name: 'Swarnalatha Saravanan',
+        role: 'Language Learner',
+        image: '',
+        text: 'Excellent teaching....such a good understanding of the language... always encouraging....teaches us all the tenses in a simplified form... You have made Hindi language easy to understand and speak.',
+        rating: 5
+      },
+      {
+        name: 'Prabhakaran muthusamy',
+        role: 'Professional',
+        image: '',
+        text: 'I have been now completed my 4th week class. I can see a difference in my Hindi proficiency. I can now frame my own sentence with the help of what all I have learnt. This training is purely on your speaking ability.',
+        rating: 5
+      },
+      {
+        name: 'Kavitha Kathir',
+        role: 'Student',
+        image: '',
+        text: 'Best method of teaching makes us to understand spoken hindi easily sir..Your army experiences ensure us in hard times. We keep on practicing hindi forever.',
+        rating: 5
+      },
+      {
+        name: 'Dharshana',
+        role: 'Language Learner',
+        image: '',
+        text: 'The best place to learn spoken Hindi. The tutor is very kind and friendly. He clarifies all our doubts clearly.',
+        rating: 5
+      },
+      {
+        name: 'Santhosh Subramaniam',
+        role: 'Professional',
+        image: '',
+        text: 'Definitely here you will come out learning Spoken Hindi.. I have attended many classes. But here it is entirely different and Mr.Surendar\'s Framework is brilliant.',
+        rating: 5
+      },
+      {
+        name: 'Girija Vasumathi',
+        role: 'Student',
+        image: '',
+        text: 'Really vry much satisfied with surendhar sir\'s classes... a vry compact and full packaged content he is giving... Easy to understand and follow it... Also he is positive and motivating.',
+        rating: 5
+      },
+      {
+        name: 'visu kavi',
+        role: 'Student',
+        image: '',
+        text: 'Excellent coaching, Everyone easy to understand.',
+        rating: 5
+      },
+      {
+        name: 'Ganesan V',
+        role: 'Language Learner',
+        image: '',
+        text: 'Super nice and friendly sir... teaching methodology very easy way to interact with all languages learners... keep moving sir.',
+        rating: 5
+      }
+    ];
+
+    try {
+      if (!isSupabaseConfigured) {
+        setTestimonials(staticTestimonials);
+        return;
+      }
+
+      const { data, error, count } = await supabase
+        .from('testimonials')
+        .select('*', { count: 'exact' })
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      setTestimonials(data && data.length > 0 ? [...data, ...staticTestimonials] : staticTestimonials);
+      if (count) setReviewCount((count + 50000).toLocaleString() + '+');
+    } catch (error) {
+      console.error('Error fetching testimonials:', error);
+      setTestimonials(staticTestimonials);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReviewSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isLoggedIn || !user) {
+      alert('Please log in with Google to leave a review.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase.from('testimonials').insert([
+        {
+          name: user.user_metadata.full_name || user.email,
+          role: 'Student',
+          image: user.user_metadata.avatar_url || '',
+          text: newReview.text,
+          rating: newReview.rating,
+          user_id: user.id
+        }
+      ]);
+
+      if (error) throw error;
+
+      alert('Thank you for your review!');
+      setNewReview({ text: '', rating: 5 });
+      fetchTestimonials();
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      alert('Failed to submit review. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // --- Scrolling Logic ---
+  const firstRow = testimonials.slice(0, Math.ceil(testimonials.length / 2));
+  const secondRow = testimonials.slice(Math.ceil(testimonials.length / 2));
 
   if (loading) {
     return (
       <section className="py-20 text-center">
+        <Loader2 className="w-10 h-10 animate-spin text-orange-500 mx-auto mb-4" />
         <p className="text-xl text-gray-600">Loading testimonials...</p>
       </section>
     );
   }
 
-  return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16" id="testimonials">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Student Testimonials
-          </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Reviews from students of Raanuva Veeran Spoken Hindi Academy
-          </p>
-        </div>
-
-        <div className="md:hidden relative">
-          <div className="overflow-hidden">
-            <div
-              className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-            >
-              {testimonials.map((testimonial, index) => (
-                <div
-                  key={index}
-                  className="w-full flex-shrink-0 px-4"
-                >
-                  <div className="bg-white rounded-2xl p-8 shadow-xl relative">
-                    <Quote className="absolute top-4 right-4 w-12 h-12 text-orange-200" />
-
-                    <div className="flex items-center gap-4 mb-6">
-                      {testimonial.image && (
-                        <img
-                          src={testimonial.image}
-                          alt={testimonial.name}
-                          className="w-16 h-16 rounded-full object-cover border-4 border-orange-200"
-                        />
-                      )}
-                      <div>
-                        <h4 className="font-bold text-gray-900 text-lg">
-                          {testimonial.name}
-                        </h4>
-                        <p className="text-gray-600 text-sm">{testimonial.role}</p>
-                      </div>
-                    </div>
-
-                    <div className="flex gap-1 mb-4">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-
-                    <p className="text-gray-700 leading-relaxed italic">
-                      "{testimonial.text}"
-                    </p>
-                  </div>
-                </div>
-              ))}
+  const TestimonialCard = ({ testimonial, index }: { testimonial: Testimonial, index: number }) => (
+    <div
+      key={testimonial.id || index}
+      className="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform relative w-[350px] flex-shrink-0 mx-4"
+    >
+      <Quote className="absolute top-4 right-4 w-12 h-12 text-orange-200" />
+      <div className="flex items-center gap-4 mb-6">
+        <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-orange-200 bg-gray-100 flex-shrink-0">
+          {testimonial.image ? (
+            <img src={testimonial.image} alt={testimonial.name} className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-orange-500 font-bold text-xl bg-orange-50">
+              {testimonial.name.charAt(0)}
             </div>
-          </div>
+          )}
+        </div>
+        <div>
+          <h4 className="font-bold text-gray-900 text-lg">{testimonial.name}</h4>
+          <p className="text-gray-600 text-sm">{testimonial.role}</p>
+        </div>
+      </div>
+      <div className="flex gap-1 mb-4">
+        {[...Array(5)].map((_, i) => (
+          <Star key={i} className={`w-5 h-5 ${i < testimonial.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
+        ))}
+      </div>
+      <p className="text-gray-700 leading-relaxed italic line-clamp-4">"{testimonial.text}"</p>
+    </div>
+  );
 
-          <div className="flex justify-center gap-2 mt-6">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${currentSlide === index
-                  ? 'bg-orange-500 w-8'
-                  : 'bg-gray-300'
-                  }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
+  return (
+    <section className="py-20 bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 overflow-hidden">
+      <style>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        @keyframes marquee-reverse {
+          0% { transform: translateX(-50%); }
+          100% { transform: translateX(0); }
+        }
+        .animate-marquee {
+          animation: marquee 40s linear infinite;
+        }
+        .animate-marquee-reverse {
+          animation: marquee-reverse 40s linear infinite;
+        }
+        .pause-on-hover:hover .animate-marquee,
+        .pause-on-hover:hover .animate-marquee-reverse {
+          animation-play-state: paused;
+        }
+      `}</style>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <div className="text-center" id="testimonials">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Student Testimonials</h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">Reviews from students of Raanuva Veeran Spoken Hindi Academy</p>
+        </div>
+      </div>
+
+      {/* Review Submission Form */}
+      <div className="max-w-2xl mx-auto mb-20 px-4">
+        <div className="bg-white rounded-3xl p-8 shadow-2xl border border-orange-100">
+          <h3 className="text-2xl font-bold text-gray-900 mb-6">Share Your Experience</h3>
+          {!isLoggedIn ? (
+            <div className="text-center py-6">
+              <p className="text-gray-600 mb-6">Please log in with Google to share your experience.</p>
+              <a href="/auth" className="inline-flex bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-3 rounded-full font-bold hover:shadow-lg transition-all">Log in to Comment</a>
+            </div>
+          ) : (
+            <form onSubmit={handleReviewSubmit} className="space-y-6">
+              <div className="flex items-center gap-4 mb-4">
+                <img src={user.user_metadata.avatar_url} alt={user.user_metadata.full_name} className="w-12 h-12 rounded-full border-2 border-orange-200" />
+                <div><p className="font-bold text-gray-900">{user.user_metadata.full_name}</p><p className="text-sm text-gray-500">Posting as Student</p></div>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Rating</label>
+                <div className="flex gap-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button key={star} type="button" onClick={() => setNewReview({ ...newReview, rating: star })} className="focus:outline-none transition-transform hover:scale-110">
+                      <Star className={`w-8 h-8 ${star <= newReview.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <textarea required value={newReview.text} onChange={(e) => setNewReview({ ...newReview, text: e.target.value })} placeholder="Tell us what you think..." className="w-full px-4 py-3 rounded-2xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none h-32 resize-none transition-all" />
+              <button type="submit" disabled={isSubmitting} className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:shadow-xl transition-all disabled:opacity-50">
+                {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />} Submit Review
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+
+      {/* Scrolling Rows */}
+      <div className="space-y-8 pause-on-hover">
+        {/* First Row */}
+        <div className="flex overflow-hidden group">
+          <div className="flex animate-marquee whitespace-nowrap">
+            {[...firstRow, ...firstRow].map((t, i) => (
+              <TestimonialCard key={`row1-${i}`} testimonial={t} index={i} />
             ))}
           </div>
         </div>
 
-        <div className="hidden md:grid grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={index}
-              className={`bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl 
-                          transition-all duration-300 transform relative
-                          ${index < 3 ? "animate-move-right" : "animate-move-left"}`}
-              style={{ animationDelay: `${index * 200}ms` }}
-            >
-              <Quote className="absolute top-4 right-4 w-12 h-12 text-orange-200" />
-
-              <div className="flex items-center gap-4 mb-6">
-                {testimonial.image && (
-                  <img
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    className="w-16 h-16 rounded-full object-cover border-4 border-orange-200"
-                  />
-                )}
-                <div>
-                  <h4 className="font-bold text-gray-900 text-lg">
-                    {testimonial.name}
-                  </h4>
-                  <p className="text-gray-600 text-sm">{testimonial.role}</p>
-                </div>
-              </div>
-
-              <div className="flex gap-1 mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                ))}
-              </div>
-
-              <p className="text-gray-700 leading-relaxed italic">
-                "{testimonial.text}"
-              </p>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-16 text-center">
-          <div className="inline-flex items-center gap-2 bg-white rounded-full px-6 py-3 shadow-lg">
-            <Star className="w-5 h-5 text-yellow-400 fill-current" />
-            <span className="font-bold text-gray-900">{averageRating}/5.0</span>
-            <span className="text-gray-600">Average Rating</span>
-            <span className="text-gray-400">|</span>
-            <span className="text-gray-600">{reviewCount} Reviews</span>
+        {/* Second Row */}
+        <div className="flex overflow-hidden group">
+          <div className="flex animate-marquee-reverse whitespace-nowrap">
+            {[...secondRow, ...secondRow].map((t, i) => (
+              <TestimonialCard key={`row2-${i}`} testimonial={t} index={i} />
+            ))}
           </div>
+        </div>
+      </div>
+
+      <div className="mt-16 text-center">
+        <div className="inline-flex items-center gap-2 bg-white rounded-full px-6 py-3 shadow-lg">
+          <Star className="w-5 h-5 text-yellow-400 fill-current" />
+          <span className="font-bold text-gray-900">{averageRating}/5.0</span>
+          <span className="text-gray-600">Average Rating</span>
+          <span className="text-gray-400">|</span>
+          <span className="text-gray-600">{reviewCount} Reviews</span>
         </div>
       </div>
     </section>
